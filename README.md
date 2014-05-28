@@ -1,13 +1,15 @@
 GameTheoryOptimalPoker
 ======================
 
-The above javascript if run from any modern browser will have an artificial intelligence play heads-up limit hold'em poker against itself. The purpose of the ai playing itself is that by tweaking the strategy one can potentially find a strategy that is game theory optimal solving limit hold'em. While this would be impossible to prove analytically it could be tested empirically.
+The above javascript runs from any modern browser and will have an artificial intelligence play heads-up limit hold'em poker against itself. The purpose of the ai playing itself is that by tweaking the strategy one can potentially find a strategy that is game theory optimal and in essence solving limit hold'em. While this would be impossible to prove analytically it could be tested empirically.
+
+*** How to Change Strategy
 
 - To change the strategy of the player (cards closest to bottom of the screen) you will need to alter to two functions.
 
-The first function is generalPlayerProbs, which initializes the probability of folding/calling/raising based on hand ranking.
+- The first function is generalPlayerProbs, which initializes the probability of folding/calling/raising based on hand ranking.
 
-The other function to change is playerProbAdjustment, which changes the strategy based on the action of the hand.
+- The other function to change is playerProbAdjustment, which changes the strategy based on the action of the hand.
 
 Variable Definitions:
 <li>button: 0 is player and 1 is comp</li>
