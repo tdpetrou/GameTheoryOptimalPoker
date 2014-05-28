@@ -3,7 +3,7 @@ GameTheoryOptimalPoker
 
 The above javascript runs from any modern browser and will have an artificial intelligence play heads-up limit hold'em poker against itself. The purpose of the ai playing itself is that by tweaking the strategy one can potentially find a strategy that is game theory optimal and in essence solving limit hold'em. While this would be impossible to prove analytically it could be tested empirically.
 
-*** How to Change Strategy
+### How to Change Strategy
 
 - To change the strategy of the player (cards closest to bottom of the screen) you will need to alter to two functions.
 
