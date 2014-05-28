@@ -11,17 +11,18 @@ The above javascript runs from any modern browser and will have an artificial in
 
 - The other function to change is playerProbAdjustment, which changes the strategy based on the action of the hand.
 
-Variable Definitions:
-<li>button: 0 is player and 1 is comp</li>
+###Variable Definitions:
 
-playerPerc[i]: is the percentile of the current player hand based on how it is ranked against every single other possible 2 card hand
+- button: 0 is player and 1 is comp
 
-playerProbs[i, j]: This array contains two number 0 to 1 and determines the action of the player. If the random number is less than i, the player will check/fold. If the random number is between i and j, the player will call and if the random number is greater than j the player will raise. For example [.2, .9] would mean the player would check/fold 20% of the time, call 70% of the time and raise 10%.
+- playerPerc[i]: is the percentile of the current player hand based on how it is ranked against every single other possible 2 card hand
 
-bluff[i]: i = 0 is for the player and the bluff is either 0 or 1 indicating whether or not to bluff
+- playerProbs[i, j]: This array contains two number 0 to 1 and determines the action of the player. If the random number is less than i, the player will check/fold. If the random number is between i and j, the player will call and if the random number is greater than j the player will raise. For example [.2, .9] would mean the player would check/fold 20% of the time, call 70% of the time and raise 10%.
 
-numCompRaises[i]: i is the round number (0 tot 3) and numCompRaises is the number of raises during that round (max of 2)
+- bluff[i]: i = 0 is for the player and the bluff is either 0 or 1 indicating whether or not to bluff
 
-roundNum: indicates which round it is (0 to 3)
+- numCompRaises[i]: i is the round number (0 tot 3) and numCompRaises is the number of raises during that round (max of 2)
 
-betRound: indicates which betting round it is for each round(flop, turn, etc...) and ranges from 0 to 4
+- roundNum: indicates which round it is (0 to 3)
+
+- betRound: indicates which betting round it is for each round(flop, turn, etc...) and ranges from 0 to 4
