@@ -1,11 +1,17 @@
 GameTheoryOptimalPoker
 ======================
 
-The above javascript runs from any modern browser and will have an artificial intelligence play heads-up limit hold'em poker against itself. The purpose of the ai playing itself is that by tweaking the strategy one can potentially find a strategy that is game theory optimal and in essence solving limit hold'em. While this would be impossible to prove analytically it could be tested empirically.
+You can play the game at [www.GameTheoryOptimalPoker.com](www.gametheoryoptimalpoker.com). This is a heads-up Texas Hold'em poker game designed to play 'game theory optimal' poker. When a game is playing a game theory optimal strategy, this means that any deviation in such a strategy would lead to a worse outcome given a long enough time-period. 
+
+## Android App
+
+In addition to the website above, an Android app is in development for which the main java code will be updated and stored in the directory _Android-App_
+
+This directory contains an html file **PokerAnywhere** which when run on any modern web browser will have an artificial intelligence play heads-up limit hold'em poker against itself. The purpose of the ai playing itself is that by tweaking the strategy one can potentially find a strategy that is game theory optimal and in essence solving limit hold'em. While this would be impossible to prove analytically it could be tested empirically.
 
 ### How to Change Strategy
 
-- To change the strategy of the player (cards closest to bottom of the screen) you will need to alter to two functions.
+- To change the strategy of the player (cards closest to bottom of the screen) you will need to alter two functions.
 
 - The first function is generalPlayerProbs, which initializes the probability of folding/calling/raising based on hand ranking.
 
