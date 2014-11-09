@@ -1,0 +1,259 @@
+.crop{
+	/*float:left; 
+	/*margin:.5em 10px .5em 0;*/
+	overflow:hidden; /* this is important */
+
+	height:98px;
+	width:74px;
+	display:inline-block;
+	
+	}
+	/* input values to crop the image: top, right, bottom, left */
+.crop img{
+	margin: 0px 0px 0px 0px;
+	}
+	
+.crop2 img{
+		margin:0px 0px 0px 0px;
+}
+
+.bigDiv {
+
+	text-align:center;
+	height:7em;
+	margin:auto;
+	width:100%;
+	white-space:nowrap;
+}
+.medDiv {
+	text-align:center;
+	height:4.5em;
+}
+.lilDiv {
+	text-align:center;
+	height:3em;
+}
+
+.tinyDiv {
+	text-align:center;
+	height:2.5em;
+}
+
+
+
+.board {	
+	/*background-color: #BCD2EE; */
+	height: 7em;
+	width: 420px;
+	margin-left:auto;
+	margin-right:auto;
+	text-align: center;
+	display:inline;
+}
+.compCard {
+	
+	/*background-color: #BCD2EE;*/
+	height: 7em;
+	width: 250px;
+	margin-left:auto;
+	margin-right:auto;
+	text-align: center;
+	display:inline;
+}
+
+.divButton {
+	overflow:hidden; /* this is important */
+	height:40px;
+	width:30px;
+	display:inline-block;
+	/*float:right;*/
+	border-radius:50px;
+	vertical-align:top;
+	}
+
+.rightBet {
+	height:7em; 
+	/*width: 25%;*/
+	width:250px;
+	display:inline-block;
+	vertical-align:top;
+	position:relative;
+}
+.farRight {
+	height:7em;
+	width:150px;
+	vertical-align:top;
+	display:inline-block;
+}
+
+.bbutton {
+	display:inline-block;
+}
+
+.fblike {
+	text-align:center;
+}
+
+#b1 {
+	
+	height:4em;
+	width:7em;
+	visibility:hidden;
+}
+
+#b2 {
+	height:80px;
+	width:200px;
+	border-radius:10px;
+
+}
+#bfold {
+	height:4em;
+	width:7em;
+	border-radius:10px;
+	visibility:hidden;
+}
+#bcall {	
+	height:4em;
+	width:7em;
+	border-radius:10px;
+	visibility:hidden;
+}
+#braise {
+	height:4em;
+	width:7em;
+	border-radius:10px;
+	visibility:hidden;
+}
+
+#imgButtonComp {
+	height:40px;
+	width:30px;
+visibility:hidden;	
+}
+
+
+#imgButtonPlayer {
+	height:40px;
+	width:30px;
+	visibility:hidden;
+}
+#playerMessage  {
+	text-align: center;
+	font-family: Garamond, serif;
+	font-size: 2em;
+	margin:0px;
+}
+
+#compMessage {
+	/*margin:-3em;*/
+	text-align: center;
+	font-family: Garamond, serif;
+	font-size: 1.5em;
+}
+
+#compMessageDiv {
+	/*height:50px; */
+	display:inline-block;
+	border:1px green;
+
+}
+
+#compBet {
+	font-size: 2em;
+	text-align:right;
+}
+
+#totalPot {
+	font-size: 2em;
+	text-align:left;
+	margin-bottom:0px;
+}
+
+#playerBet {
+	font-size: 2em;
+	text-align:right;
+}
+
+#totalCompChips {
+	font-size: 2em;
+	text-align:left;
+}
+#totalPlayerChips {
+	font-size: 2em;
+	text-align:left;
+	margin-bottom:0px;
+}
+
+
+#header {
+	text-align: center;
+	font-family: Garamond, serif;
+	font-size: 3em;
+}
+
+
+#seeStats {
+	margin-top:0px;
+	text-align:left;
+}
+
+#handHistory {
+	margin-top:0px;
+	text-align:left;
+	visibility:hidden;
+}
+
+.speedButton {
+	text-align:center;
+	width:100%;	
+}
+
+#decButton {
+	width:100%;
+}
+
+
+#incButton {
+	width:100%;
+}
+
+#speedP {
+	font-size:1.5em;
+}
+
+a {	
+	color: blue;
+	font-size:1em;
+	font-family: Verdana, sans-serif;
+	text-align:left;
+	
+}
+
+/* {
+	border:1px red dotted;
+}  */
+
+span {
+	font-weight: bold;
+	font-size: 18px;
+	color: #ffffff;
+}
+
+#thecanvas {
+	position:absolute;
+}
+
+#cardFly {
+	position:absolute;
+	top:-10px;
+	left:-10px;
+	visibility:hidden;
+}
+
+body {
+	background-color: green;
+	}
+	
+	
+

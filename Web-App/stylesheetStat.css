@@ -1,0 +1,29 @@
+#header {
+	text-align: center;
+	font-family: Garamond, serif;
+	font-size: 3em;
+}
+
+td {
+	width:10em;
+	word-wrap:break-word;
+	text-align:center;
+}
+
+#pc {
+	background-color:green;
+}
+
+#cc {
+	background-color:red;
+}
+
+#thead {
+	font-size:1.5em;
+	margin-bottom:0px;
+
+}
+
+div {
+	margin:20px;
+}

@@ -1,0 +1,2315 @@
+<!DOCTYPE html>
+<html>
+	<head prefix="og: http://ogp.me/ns#">
+		<meta property="og:image" content="preview.png"/>
+		<meta property="og:image:type" content="image/png">
+		<!--<link rel="image_src" href="preview.png"/>-->
+		<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
+		<title>Limit Heads-Up</title>
+		<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-15851869-1', 'steakaholic.com');
+  ga('send', 'pageview');
+
+</script>
+		
+	</head>
+	<body>
+	<div id="fb-root"></div>
+		<script>
+ window.fbAsyncInit = function() {
+ //alert("FB is loaded");
+  FB.init({
+    appId      : '482632948508288',
+    status     : true, // check login status
+    cookie     : true, // enable cookies to allow the server to access the session
+    xfbml      : true  // parse XFBML
+  });
+
+  // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+  // for any authentication related change, such as login, logout or session refresh. This means that
+  // whenever someone who was previously logged out tries to log in again, the correct case below 
+  // will be handled. 
+  FB.Event.subscribe('auth.authResponseChange', function(response) {
+  
+    // Here we specify what we do with the response anytime this event occurs.
+		if(!fbFirst) { return; }		
+    //if (response.status === 'connected') {
+      // The response object is returned with a status field that lets the app know the current
+      // login status of the person. In this case, we're handling the situation where they 
+      // have logged in to the app.
+      testAPI();
+   // }// else if (response.status === 'not_authorized') {
+      // In this case, the person is logged into Facebook, but not into the app, so we call
+      // FB.login() to prompt them to do so. 
+      // In real-life usage, you wouldn't want to immediately prompt someone to login 
+      // like this, for two reasons:
+      // (1) JavaScript created popup windows are blocked by most browsers unless they 
+      // result from direct interaction from people using the app (such as a mouse click)
+      // (2) it is a bad experience to be continually prompted to login upon page load.
+	 // alert("howdy not logged in");
+      //FB.login();
+    //} 
+	//else if (response.status === 'unknown') {
+      // In this case, the person is not logged into Facebook, so we call the login() 
+      // function to prompt them to do so. Note that at this stage there is no indication
+      // of whether they are logged into the app. If they aren't then they'll see the Login
+      // dialog right after they log in to Facebook. 
+      // The same caveats as above apply to the FB.login() call here.
+      //FB.login();
+	 // alert("You are logged out of Facebook. Your stats will be tracked by the first 4 of your IP address.");
+    //}
+  }); 
+  };
+  
+  
+ (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=482632948508288";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+
+//var auth_response_change_callback = function(response) {
+ // alert("change happened " + response.status);
+//}
+
+  // Load the SDK asynchronously
+  /*(function(d){
+   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement('script'); js.id = id; js.async = true;
+   js.src = "//connect.facebook.net/en_US/all.js";
+   ref.parentNode.insertBefore(js, ref);
+  }(document));*/
+
+  // Here we run a very simple test of the Graph API after login is successful. 
+  // This testAPI() function is only called in those cases. 
+  function testAPI() {
+	
+		/*FB.api('/me', function(response) {
+			if(response.id > 0) {
+				fbID = response.id;
+			}
+			fbName = response.name;
+			//alert('Good to see you, ' + fbName + '. Your facebook id is ' + fbID);
+			//alert("By logging in you will have your stats tracked by your facebook name and ID. Log out if you wish otherwise.");	
+		
+			/*FB.logout(function(response) {
+			// user is now logged out
+			alert("You have logged out. Your stats will be tracked by the first 4 of your IP");
+			}); 
+		});*/
+		//alert("status changing");
+		
+		FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+							
+				FB.api('/me', function(user) {
+					fbName = user.name;
+					fbID = user.id;
+					});
+					
+					
+				/*FB.api(
+					"/me/picture",
+					/*{
+						"object": {
+						"redirect": false,
+						"height": "200",
+						"type": "normal",
+						"width": "200"
+						}
+					}, 
+				function (response) {
+				alert("pic response error " + response.error + "  reposnse is " + response);
+				
+				fbURL = response.data.url;
+					alert(fbURL);
+					document.getElementById("playerMessage").innerHTML = fbURL;
+				if (response && !response.data.error) {
+					/* handle the result 
+					fbURL = response.data.url;
+					alert("asdfas " + fbURL);
+				}
+				});	*/
+					
+					
+					
+			}
+			else {
+				fbName = '';
+				fbID = 0;
+			}
+		});
+    
+  }
+  
+
+
+			//window.alert = function() {};
+			
+			
+
+			
+			
+		
+			var allCards =[];
+			var cardNumber = 0;
+			var roundNum = 1;
+			var button = 0;	//player starts off with button
+			var turn = 0; //players turn
+			var betRound = 1;
+			var betsize = 10;
+			var curCompBet = 10;
+			var curPlayerBet = 5;
+			var compChips = 1000;
+			var playerChips = 1000;
+			var pot = 0;
+			var compGone = 0;  //keeps track of whether comp has played
+			var playerGone = 0;
+			var winMessage = "";
+			var score = 0;
+			var compProbs = [.2, .8];
+			var percentile = 0;
+			var numberHandsPlayed = 0;
+			var compStartHandChips = 0;
+			var playerStartHandChips = 0;
+			var handNum = 0;
+			var flagPlayerWin = false;
+			var numCompRaises = [0, 0, 0, 0]; //last round, this round
+			var numPlayerRaises = [0, 0, 0, 0];
+			var betEachRound = [0, 0, 0, 0];
+			var drawingHand = 0;
+			var pscore = 0; //preflop score
+			var pscorePlayer = 0;
+			var lastHandMessage = ["",""];
+			var lastRaise = [-1, -1, -1, -1]; //keeps track of who raised last
+			var bluff = 0;
+			var overs = 0;
+			var playerPerc = [0, 0, 0];
+			var compPerc = [0, 0, 0];
+			var fbName = "";
+			var fbID = 0;
+			var fbFirst = true;
+			var totIPSessions = 0;
+			var fbURL = '';
+			var allInComp = false;
+			var allInPlayer = false;
+			
+			
+			function changeRound()
+			{	
+				//alert("changing round, roundnum now is " + roundNum);
+				if (roundNum == 1) {
+					animateCard();
+					initiateBluff();
+					twoOvers();
+					
+					}
+				else if (roundNum == 2){
+					animateCard();					
+					betsize = 20;
+				}
+				else if (roundNum == 3) {
+					animateCard();
+				}
+				else {
+					betEachRound[roundNum - 1] = curCompBet;
+					document.getElementById("card8").src = "allcards.png"
+					document.getElementById("card9").src = "allcards.png"
+					changecard('card8');
+					changecard('card9');
+					roundNum++;
+					evaluateHands();
+					//document.getElementById("b1").style.visibility = "visible";
+				}
+			}
+			
+			function changecard(name){				
+				var rank = 0;
+				var suit = 0;
+				var id = document.getElementById(name);
+				rank = allCards[cardNumber] % 13 * -73;
+				suit = Math.floor(allCards[cardNumber] / 13) * -98;	
+				id.style.margin = suit + "px 0px 0px " + rank + "px";	
+				cardNumber++;
+			}
+			
+			
+			function changeCompCardEarly(){				
+				var rank = 0;
+				var suit = 0;
+				var id = document.getElementById("card8");
+				document.getElementById("card8").src = "allcards.png";				
+				rank = allCards[7] % 13 * -73;
+				suit = Math.floor(allCards[7] / 13) * -98;	
+				id.style.margin = suit + "px 0px 0px " + rank + "px";	
+				
+				document.getElementById("card9").src = "allcards.png";
+				id = document.getElementById("card9");
+				rank = allCards[8] % 13 * -73;
+				suit = Math.floor(allCards[8] / 13) * -98;
+				id.style.margin = suit + "px 0px 0px " + rank + "px";
+				
+			}
+			
+			
+			function getRandomSubarray(arr, size) {
+				var shuffled = arr.slice(0), i = arr.length, temp, index;
+				for(var i = 51; i >=0; i--)  {
+				index = Math.floor((i+1) * Math.random());
+				temp = shuffled[index];
+				shuffled[index] = shuffled[i];
+				shuffled[i] = temp;
+				}
+				return shuffled.slice(0, size);
+			}
+			
+			function range(start, end, exclude) {
+				var arr = [];
+
+				while (start <= end) {
+					if(exclude.indexOf(start) == -1){
+						arr.push(start++)
+					}
+					else {	start++; }
+				}
+
+				return arr;
+			};
+
+			function getCards(){
+				cardNumber = 0;
+				allCards = getRandomSubarray(range(0,51, []), 9);
+				//allCards = [8,0,3,27,28,0,26,4,19];
+				//allCards = [9,22,8,19,35,12,25,0,13];
+				document.getElementById('card2').style.height = "";
+				   document.getElementById('card2').style.width = "";
+				   document.getElementById('card2').src = "allcards.png";
+				   
+				   changecard('card');
+				   changecard('card2');
+				   changecard('card3');
+				   changecard('card4');
+				   changecard('card5');
+				   changecard('card6');
+				   changecard('card7');
+				   
+			}
+			
+			function startPlay() {		
+			numberHandsPlayed += 1;
+			  
+			
+/*var canvas = document.getElementById('thecanvas');
+if(canvas.getContext) 
+{
+  var ctx = canvas.getContext('2d');
+  //drawEllipse(ctx, 400, 80, 700, 450);
+  //drawEllipseByCenter(ctx, 60,40,20,10);
+}*/
+
+function drawEllipseByCenter(ctx, cx, cy, w, h) {
+  drawEllipse(ctx, cx - w/2.0, cy - h/2.0, w, h);
+}
+
+function drawEllipse(ctx, x, y, w, h) {
+  var kappa = .5522848,
+      ox = (w / 2) * kappa, // control point offset horizontal
+      oy = (h / 2) * kappa, // control point offset vertical
+      xe = x + w,           // x-end
+      ye = y + h,           // y-end
+      xm = x + w / 2,       // x-middle
+      ym = y + h / 2;       // y-middle
+
+  ctx.beginPath();
+  ctx.moveTo(x, ym);
+  ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+  ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+  ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+  ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+
+			
+				   //changecard('card8'); need new function for revealing computer cards. need to change source
+				   //changecard('card9');
+				   document.getElementById("b2").style.visibility="hidden";
+				   //document.getElementById("b1").style.visibility="hidden";
+				   document.getElementById("bfold").style.visibility="visible";
+				   document.getElementById("bcall").style.visibility="visible";
+				   document.getElementById("braise").style.visibility="visible";	
+				   document.getElementById("card3").style.visibility = "hidden";
+				   document.getElementById("card4").style.visibility = "hidden";
+				   document.getElementById("card5").style.visibility = "hidden";
+				   document.getElementById("card6").style.visibility = "hidden";
+				   document.getElementById("card7").style.visibility = "hidden";
+				   document.getElementById("card8").src = "card_back.png";
+				   document.getElementById("card9").src = "card_back.png";
+				   document.getElementById("card8").style.visibility = "visible";
+				   document.getElementById("card9").style.visibility = "visible";
+				   document.getElementById("card8").style.margin = "0px 0px 0px 0px";
+				   document.getElementById("card9").style.margin = "0px 0px 0px 0px";
+				   document.getElementById("handCounter").style.visibility = "visible";
+				   
+				   
+				   //document.getElementById("winnerMessage").innerHTML = "";
+				   startHand();
+                };
+				
+				
+				
+				function startHand() {
+					
+					if(handNum > 0){ 									
+						document.getElementById("handHistory").style.visibility="visible";						
+					}; 
+					
+					if(compChips  <= 0 || playerChips <= 0) { congratPlayer();}
+					
+					
+									
+						roundNum = 1;
+						betRound = 1;
+						betsize = 10;
+						compGone = 0;
+						playerGone = 0;
+						pot = 0;
+						score = 0;
+						percentile = 0;
+						numCompRaises = [0, 0, 0, 0]; //last round, this round
+						numPlayerRaises = [0, 0, 0, 0];
+						betEachRound = [0, 0, 0, 0];
+						drawingHand = 0;
+						lastRaise = [-1, -1, -1, -1];
+						bluff = 0;
+						overs = 0;
+						playerPerc = [0, 0, 0];
+						compPerc = [0, 0, 0];
+						lastHandMessage[1] = "";
+						totIPSessions = 0;
+						allInComp = false;
+						allInPlayer = false;
+						getCards();
+						
+						compStartHandChips = compChips;
+						playerStartHandChips = playerChips;
+						compProbs = computeProbs();
+						
+						handNum++;
+						lastHandMessage[1] += "<h1>Hand History for hand #" + handNum + "<br></h1>";
+						lastHandMessage[1] += "<p>Player Chips: " + playerChips + "<br>";
+						lastHandMessage[1] += "Computer Chips: " + compChips + "<br></p>"; 
+						lastHandMessage[1] += "<p>You are dealt " + cardToHtml(cardToString(allCards[0])) + " " + cardToHtml(cardToString(allCards[1])) + "<br></p>"; 
+						
+						//changeCompCardEarly();
+						
+						document.getElementById("handCounter").innerHTML = "Hand # " + handNum;
+						
+						
+						//if(numberHandsPlayed == 1) {
+							//testAPI();							
+						//}	
+						
+						
+						
+					if (button == 0){						
+						//document.getElementById("playerMessage").innerHTML ="New hand: You have the button";
+						
+						curPlayerBet = Math.min(5, playerChips);						
+						curCompBet = Math.min(10, compChips);	
+						
+						document.getElementById("playerMessage").style.visibility = "visible";
+						document.getElementById("playerMessage").innerHTML = "Bet: " + curPlayerBet;
+						document.getElementById("compMessage").innerHTML = " ";
+						document.getElementById("imgButtonPlayer").style.visibility = "visible";				
+						document.getElementById("imgButtonComp").style.visibility = "hidden";						
+						document.getElementById("playerBet").innerHTML = "Player Bet: " + curPlayerBet;
+						document.getElementById("compBet").innerHTML = "Computer Bet: " + curCompBet;
+						lastHandMessage[1] += "<p>Player is button and posts small blind of " + curPlayerBet + "<br>";
+						lastHandMessage[1] += "Computer posts big blind of " + curCompBet + "<br></p>";
+						//playerTurn();
+					}
+					else {						
+						//document.getElementById("compMessage").innerHTML ="New hand: Computer has the button";
+						
+						curPlayerBet = Math.min(10, playerChips);
+						curCompBet = Math.min(5, compChips);
+						document.getElementById("compMessage").style.visibility = "visible";
+						document.getElementById("playerMessage").innerHTML = "Bet: " + curPlayerBet;
+						document.getElementById("imgButtonComp").style.visibility = "visible";	
+						document.getElementById("imgButtonPlayer").style.visibility = "hidden";
+						document.getElementById("playerBet").innerHTML = "Player Bet: " + curPlayerBet;
+						document.getElementById("compBet").innerHTML = "Computer Bet: " + curCompBet;
+						lastHandMessage[1] += "<p>Computer is button and posts small blind of " + curCompBet + "<br>";
+						lastHandMessage[1] += "Player posts big blind of " + curPlayerBet + "<br></p>";
+						//compTurn();
+					}
+					
+						playerChips -= curPlayerBet;
+						compChips -= curCompBet;
+						//pot = curCompBet + curPlayerBet; lets change pot after current round is over
+						changeBets();
+						if(compChips == 0 && curCompBet == 5) { togglePlayerButtons(0); compAllIn("calls"); return;}
+						if(playerChips == 0 && curPlayerBet == 5) { togglePlayerButtons(0); playerAllIn("call"); return;}
+						
+						
+						if (button == 0){
+						
+							playerTurn();
+						}
+						else {
+							compTurn();
+						}
+						
+					};
+					
+				function determineTurn(){
+					pot = pot + curCompBet + curPlayerBet;
+					curCompBet = 0;
+					curPlayerBet = 0;
+					betRound = 0;
+					compGone = 0;
+					playerGone = 0;
+					changeBets();
+					changeCurrBets();
+					document.getElementById("compMessage").innerHTML = " ";
+					if (button == 0){	//player is button so computer goes first					
+						compTurn();					
+					}
+					else {
+						playerTurn();						
+					}				
+				
+				}
+				
+				function playerTurn() {		
+					//alert("player turn");
+					if (roundNum > 4) {
+						evaluateHands();
+						//document.getElementById("b1").style.visibility = "visible";
+						togglePlayerButtons(0);
+						return(0);
+					}
+					
+					if(allInPlayer){
+						playerAllIn();
+						return(0);
+					}
+				
+					if(playerChips == 0) { togglePlayerButtons(0); playerAllIn("call"); return;}
+						
+					if(allInComp && curCompBet == 0){ togglePlayerButtons(0); compTurn(); }				
+					//document.getElementById("playerMessage").innerHTML = "Your turn";
+					document.getElementById("playerMessage").style.visibility ="visible";
+					togglePlayerButtons(1);
+					//if(curCompBet - curPlayerBet + betsize > playerChips && curCompBet != 0) { document.getElementById("braise").style.visibility = "hidden"; }
+					changeButtons();											
+				};
+				
+				function compTurn(){
+					togglePlayerButtons(0);
+					
+					//alert("comp turn");
+					if(allInComp){
+						compAllIn();
+						return(0);
+					}
+					
+					if(compChips == 0) { togglePlayerButtons(0); compAllIn("calls"); return;}
+						
+					if(compChips <= betsize && curCompBet < curPlayerBet || (playerChips <= betsize && playerGone == 1 && curPlayerBet > 0)){
+						compCall();
+						return(0);
+					}
+					
+					if(allInPlayer && curPlayerBet == 0) { playerAllIn("call"); return;}
+					
+					//prompt("percentile is " + percentile);
+					
+					//compProbs = computeProbs(allCards.slice(7,9));
+					
+					//insert function call here for an adjustment on compProbs for pot and bet round
+					probAdjustment();
+					//document.getElementById("perc").innerHTML = "percentile is " + Math.round(percentile) + " and comp prob is " + compProbs[0] + " , " + compProbs[1] + " and bluff is " + bluff; 
+					var rand = Math.random();
+					//document.getElementById("playerMessage").innerHTML = " ";
+					if(curCompBet == curPlayerBet){
+						if (rand < compProbs[1]) { //comp checks
+							compCheck();										
+						} 
+						else {
+							compRaise();
+							//playerTurn();
+						}
+						
+						return(0);
+					}
+					
+					if (betRound == 4){
+						//compCall();
+						compProbs[1] = 1;						
+						//return(0);
+					}
+					
+					if (curCompBet == 5){
+						if (rand < compProbs[0]) {compFold(); return(0);}
+						else if (rand < compProbs[1]) { compCall(); }	
+						else { compRaise();}					
+						//if (continueHand()){ playerTurn(); }
+							return(0);
+					}
+					
+					if (curCompBet < curPlayerBet){
+						if (rand < compProbs[0]) {compFold(); return(0);}
+						else if (rand < compProbs[1]) { compCall(); }	
+						else { compRaise();}
+						//if (continueHand()){ playerTurn(); }
+						return(0);
+					}
+				
+				}
+				
+				function changeBets() {
+						document.getElementById("totalPlayerChips").innerHTML ="Chips: " + playerChips;
+						document.getElementById("totalCompChips").innerHTML ="Chips: " + compChips;						
+						document.getElementById("totalPot").innerHTML = "Total Pot: " + pot;				
+				}
+				
+				function changeCurrBets() {
+					document.getElementById("playerBet").innerHTML = "Player Bet: " + curPlayerBet;
+					if(!allInPlayer) {document.getElementById("playerMessage").innerHTML = "Bet: " + curPlayerBet; }
+					document.getElementById("compBet").innerHTML = "Computer Bet: " + curCompBet;
+				
+				
+				}
+				
+				function changeButtons(){
+					var foldb = document.getElementById("bfold");
+					var callb = document.getElementById("bcall");
+					var raiseb = document.getElementById("braise");
+					
+					if(curCompBet == 0 && curPlayerBet == 0) {
+						callb.style.visibility = "hidden";
+						foldb.innerHTML = "Check";
+						raiseb.innerHTML = "Bet " + (curCompBet + Math.min(playerChips, betsize));			
+					}
+					else {
+					
+						if (betRound < 4) {								
+							raiseb.innerHTML = "Raise to " + Math.min(playerChips + curPlayerBet, betsize + curCompBet);
+							foldb.innerHTML = "Fold";
+							if(playerChips <= curCompBet - curPlayerBet) { raiseb.style.visibility = "hidden"; }
+						}
+						else {
+							raiseb.style.visibility = "hidden";
+						}
+					
+						if (roundNum == 1 && betRound == 1 && curCompBet == curPlayerBet) {								
+							callb.style.visibility = "hidden";
+							foldb.innerHTML = "Check";
+							raiseb.innerHTML = "Raise to " + (curCompBet +  Math.min(playerChips, betsize));									
+						}						
+						else {								
+							callb.innerHTML = "Call " + Math.min((curCompBet - curPlayerBet), playerChips);
+							foldb.innerHTML = "Fold";
+						}								
+					}
+					
+					if(allInComp) {
+						raiseb.style.visibility = "hidden";
+					}
+					
+					
+					
+					
+				}
+				
+				
+				function togglePlayerButtons(indicator) {
+					var foldb = document.getElementById("bfold");
+					var callb = document.getElementById("bcall");
+					var raiseb = document.getElementById("braise");
+					if(indicator == 1){
+					foldb.style.visibility = "visible";
+					callb.style.visibility = "visible";
+					raiseb.style.visibility = "visible";
+					}
+					else {
+					foldb.style.visibility = "hidden";
+					callb.style.visibility = "hidden";
+					raiseb.style.visibility = "hidden";
+					
+					}				
+				}
+				
+				function changeDealer(){
+					if(button == 0) {
+							button = 1;
+						}
+						else {
+							button = 0;
+						}
+				}
+				
+				function fold() {
+					if (document.getElementById("bfold").innerHTML == "Check"){
+						playerGone = 1;
+						lastHandMessage[1] += "<p>Player checks<br></p>";
+						if(continueHand()) {compTurn();}
+						
+					}
+					else {
+						document.getElementById("playerMessage").innerHTML ="You folded. Computer wins pot."
+						togglePlayerButtons(0);
+						compChips += pot + curCompBet + curPlayerBet;
+						betEachRound[roundNum - 1] = curPlayerBet;
+						changeDealer();
+						changeBets();
+						lastHandMessage[1] += "<p>Player folds<br></p>";
+						lastHandMessage[1] += "<p>Computer wins " + (pot / 2 + curPlayerBet) + " chips<br>";
+						lastHandMessage[1] += "Player Chips: " + playerChips + "<br>";
+						lastHandMessage[1] += "Computer Chips: " + compChips + "<br></p>"; 
+						lastHandMessage[0] = lastHandMessage[1] + lastHandMessage[0];
+						//document.getElementById("b1").style.visibility = "visible";
+						document.getElementById("bcall").innerHTML = "Start Next Hand";
+						document.getElementById("bcall").style.visibility = "visible";
+						enterHand(compChips - compStartHandChips);
+					}
+				}
+				
+				function call() {
+				
+					if(document.getElementById("bcall").innerHTML == "Start Next Hand") { 
+						document.getElementById("bcall").innerHTML = "Call";
+						startPlay();
+						return(0);
+					}
+					
+					if( (curCompBet - curPlayerBet) >= playerChips){ //allIN
+							playerAllIn("call");
+							return(0);
+					}
+					
+					
+					playerChips = playerChips - (curCompBet - curPlayerBet);
+					curPlayerBet = curCompBet;
+					changeBets();
+					changeCurrBets();
+					//document.getElementById("playerMessage").innerHTML ="You called to " + curPlayerBet
+					lastHandMessage[1] += "<p>Player calls to " + curPlayerBet + "<br></p>";
+					playerGone = 1;
+					//lastRaise[roundNum - 1] = 1; //comp makes last raise
+					
+					if (compGone == 0) {
+						compTurn();					
+					}
+					else {
+						continueHand();
+					}
+				}			
+				
+				function raise(){			
+					//if(curCompBet > 0)  { bluff = 0; }	
+					playerGone = 1;
+					compGone = 0;
+					betRound += 1;
+					//curPlayerBet - curCompBet + betsize
+					if( playerChips - (curCompBet - curPlayerBet + betsize) <= 0){ //allIN
+							//alert("raising all in");
+							playerAllIn("raise");
+							return(0);
+					}
+					
+					playerChips = playerChips - (curCompBet - curPlayerBet + betsize);
+					curPlayerBet = curCompBet + betsize;
+					
+					changeBets();
+					changeCurrBets();	
+					if(curCompBet == 0) {
+						lastHandMessage[1] += "<p>Player bets " + curPlayerBet + "<br></p>";
+					}
+					else {
+						lastHandMessage[1] += "<p>Player raises to " + curPlayerBet + "<br></p>";
+					}
+					//document.getElementById("playerMessage").innerHTML ="You raised to " + curPlayerBet;
+					numPlayerRaises[roundNum - 1] += 1;
+					lastRaise[roundNum - 1] = 0; //player makes last raise
+					compTurn();									
+				}
+				
+								
+				function compCheck() {
+					document.getElementById("compMessage").innerHTML = "Computer checks";
+					document.getElementById("compMessage").style.visibility = "visible";
+					lastHandMessage[1] += "<p>Computer Checks<br></p>";
+					var i = 0;
+					var numJumps = 50;
+					var  speedAdj = parseInt(getSpeedAdj());
+					var myInt = setInterval(function(){
+					
+							document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+							i += 1;
+							if(i == numJumps) {
+								clearInterval(myInt);
+								changeCurrBets();
+								compGone = 1;
+								if (continueHand()){ playerTurn(); }															
+							}
+							}	, 14 - speedAdj * 1.2);			
+				}
+				
+				function compCall(){
+					compGone = 1;
+						if( (curPlayerBet - curCompBet) >= compChips){ //allIN
+							compAllIn("calls");
+							return(0);
+						}
+				
+						var i = 0;
+						var numJumps = 50;
+						var  speedAdj = parseInt(getSpeedAdj());
+						document.getElementById("compMessage").innerHTML = "Computer calls to " + curPlayerBet;
+						document.getElementById("compMessage").style.visibility = "visible";
+						lastHandMessage[1] += "<p>Computer calls to " + curPlayerBet + "<br></p>";
+						
+						//lastRaise[roundNum - 1] = 0;
+						
+						var myInt = setInterval(function(){document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+							i += 1;
+							if(i == numJumps) {
+								clearInterval(myInt);
+								compChips = compChips - (curPlayerBet - curCompBet);
+								curCompBet = curPlayerBet;
+								//compGone = 1;
+								changeBets();
+								changeCurrBets();		
+								if (continueHand()){ playerTurn(); }								
+							}
+							} , 14 - speedAdj * 1.2);						
+										
+				}
+				
+				function compRaise(){
+					
+						compGone = 1;
+						playerGone = 0;
+						betRound += 1;
+						numCompRaises[roundNum - 1] += 1;
+
+						if( compChips - (curPlayerBet - curCompBet + betsize) <= 0){ //allIN
+							compAllIn("raises");
+							return(0);
+						}
+					
+						var i = 0;
+						var numJumps = 50;
+						var  speedAdj = parseInt(getSpeedAdj());
+						compChips = compChips - (curPlayerBet - curCompBet + betsize);
+						curCompBet = curPlayerBet + betsize;
+						
+						
+						if (curPlayerBet == 0) {
+							document.getElementById("compMessage").innerHTML = "Computer bets " + curCompBet;
+							lastHandMessage[1] += "<p>Computer bets " + curCompBet + "<br></p>";
+						}
+						else {
+							document.getElementById("compMessage").innerHTML = "Computer raises to " + curCompBet;
+							lastHandMessage[1] += "<p>Computer raises to " + curCompBet + "<br></p>";
+						}
+						document.getElementById("compMessage").style.visibility = "visible";
+						//compGone = 1;
+						//playerGone = 0;
+						//betRound += 1;
+						//numCompRaises[roundNum - 1] += 1;
+						lastRaise[roundNum - 1] = 1; //comp makes last raise
+						
+						var myInt = setInterval(function(){
+							document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+							i += 1;
+							if(i == numJumps) {
+								clearInterval(myInt);
+								changeBets();
+								changeCurrBets();
+										
+								if (continueHand()){ playerTurn(); }								
+							}
+							}, 14 - speedAdj * 1.2);						
+										
+				}
+				
+				function compFold(){
+						var i = 0;	
+						var numJumps = 50;
+						var  speedAdj = parseInt(getSpeedAdj());
+						document.getElementById("compMessage").innerHTML = "Computer folds. You win pot.";						
+						document.getElementById("compMessage").style.visibility = "visible";
+						lastHandMessage[1] += "<p>Computer folds <br></p>";
+						togglePlayerButtons(0);
+						playerChips += pot + curCompBet + curPlayerBet;
+						lastHandMessage[1] += "<p>Player wins " + (pot / 2 + curCompBet) + " chips<br>";
+						lastHandMessage[1] += "Player Chips: " + playerChips + "<br>";
+						lastHandMessage[1] += "Computer Chips: " + compChips + "<br></p>"; 
+						lastHandMessage[0] = lastHandMessage[1] + lastHandMessage[0];
+						betEachRound[roundNum - 1] = curCompBet;
+						changeDealer();
+						changeBets();
+						enterHand(compChips - compStartHandChips);
+						
+						
+						var myInt = setInterval(function(){
+							document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+							i += 1;
+							if(i == numJumps) {
+								clearInterval(myInt);										
+								//if (continueHand()){ playerTurn(); }	
+								//document.getElementById("b1").style.visibility = "visible";	
+								document.getElementById("bcall").innerHTML = "Start Next Hand";
+								document.getElementById("bcall").style.visibility = "visible";								
+							}
+							} , 14 - speedAdj * 1.2);						
+											
+								
+				}
+				
+				function compAllIn(message){
+						//alert("roundnum is " + roundNum);
+						togglePlayerButtons(0);
+						allInComp = true;
+						if(message == "calls") {
+							curCompBet = curCompBet + compChips;
+							curPlayerBet = curCompBet;
+						} else if (message == "raises"){
+							//alert("Comp chips left " + compChips + " Current player chips is " + curPlayerBet);
+							curCompBet = curCompBet + compChips;
+						}
+						
+				
+						var i = 0;
+						var numJumps = 50;
+						var  speedAdj = parseInt(getSpeedAdj());
+						
+						if(curCompBet == 0 || compChips == 0) {
+							document.getElementById("compMessage").innerHTML = "Computer is all in";
+							document.getElementById("compMessage").style.visibility = "visible";
+							lastHandMessage[1] += "<p>Computer is all in" + "<br></p>";
+							playerGone = 1;
+						} else {
+							document.getElementById("compMessage").innerHTML = "Computer " + message + " to " + curCompBet + " and is all in";
+							document.getElementById("compMessage").style.visibility = "visible";
+							lastHandMessage[1] += "<p>Computer " + message + " to " + curCompBet + " and is all in" + "<br></p>";
+						}
+						compGone = 1;
+						lastRaise[roundNum - 1] = 0;
+						
+						var myInt = setInterval(function(){document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+							i += 1;
+							if(i == numJumps) {
+								clearInterval(myInt);
+								compChips = 0;
+								//compGone = 1;
+								changeBets();
+								changeCurrBets();		
+								if (continueHand()){ playerTurn(); }								
+							}
+							} , 14 - speedAdj * 1.2);						
+										
+				}
+				
+				function playerAllIn(message){
+						//alert("roundnum is " + roundNum);
+						allInPlayer = true;
+						if(message == "call") {
+							curPlayerBet = curPlayerBet + playerChips;
+							curCompBet = curPlayerBet;
+							lastRaise[roundNum - 1] = 1;
+						} else if (message == "raise"){
+							//alert("Comp chips left " + compChips + " Current player chips is " + curPlayerBet);
+							curPlayerBet = curPlayerBet + playerChips;							
+						}
+						
+				
+						var i = 0;
+						var numJumps = 50;
+						var  speedAdj = parseInt(getSpeedAdj());
+						
+						if(curPlayerBet == 0 || playerChips == 0) {
+							document.getElementById("playerMessage").innerHTML = "Player is all in";
+							document.getElementById("playerMessage").style.visibility = "visible";
+							lastHandMessage[1] += "<p>Player is all in" + "<br></p>";
+							compGone = 1;
+							lastRaise[roundNum - 1] = -1;
+						} else {
+							document.getElementById("playerMessage").innerHTML = "You " + message + " to " + curPlayerBet + " and are all in";
+							document.getElementById("playerMessage").style.visibility = "visible";
+							lastHandMessage[1] += "<p>Player " + message + " to " + curPlayerBet + " and is all in" + "<br></p>";
+						}
+						playerGone = 1;
+						
+						
+						var myInt = setInterval(function(){document.getElementById("playerMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+							i += 1;
+							if(i == numJumps) {
+								clearInterval(myInt);
+								playerChips = 0;
+								//compGone = 1;
+								changeBets();
+								changeCurrBets();		
+								if (continueHand()){ compTurn(); }								
+							}
+							} , 14 - speedAdj * 1.2);						
+										
+				}
+				
+				
+				function evaluateHands(){
+					var playerValue = 0;
+					var compValue = 0;
+					
+					
+					togglePlayerButtons(0);
+					pot = pot + curCompBet + curPlayerBet;
+					curCompBet= 0; 
+					curPlayerBet = 0;
+					changeBets();
+					changeCurrBets();
+					changeDealer();
+					score = 0;
+					playerValue = handValue(allCards.slice(0,7));
+					score = playerValue;
+					compValue = handValue(allCards.slice(2,9));
+					
+					document.getElementById("compMessage").innerHTML = " ";
+					
+					//alert("player score is " + playerValue + " comp value is " + compValue);
+					if(playerValue > compValue) {
+						playerChips = playerStartHandChips + pot / 2;
+						document.getElementById("playerMessage").innerHTML = "You win with " + winMessage;
+						lastHandMessage[1] += "<p>Player wins " + pot/2 + " chips with " + winMessage + "<br></p>";
+						
+					}
+					else if (compValue > playerValue){
+						compChips = compStartHandChips + pot / 2;
+						document.getElementById("playerMessage").innerHTML = "Computer wins with " + winMessage;
+						lastHandMessage[1] += "<p>Computer wins " + pot / 2 + " chips with " + winMessage + "<br></p>";
+					}
+					else {
+						compChips += pot / 2;
+						playerChips += pot / 2;
+						document.getElementById("playerMessage").innerHTML = "Players split with " + winMessage;
+					}
+					lastHandMessage[1] += "<p>Computer was dealt " + cardToHtml(cardToString(allCards[7])) + " " + cardToHtml(cardToString(allCards[8])) + "<br></p>"; 						
+					lastHandMessage[1] += "<p>Player Chips: " + playerChips + "<br></p>";
+					lastHandMessage[1] += "<p>Computer Chips: " + compChips + "<br></p>"; 	
+					lastHandMessage[0] = lastHandMessage[1] + lastHandMessage[0];
+					document.getElementById("bcall").innerHTML = "Start Next Hand";
+					document.getElementById("bcall").style.visibility = "visible";
+					changeBets();							
+					enterHand(compChips - compStartHandChips); //write to db
+				}
+				
+				function continueHand() {
+						
+						if (compGone && playerGone){							
+							changeRound();	
+								return(0);
+						}
+						else {
+								return(1);
+						}
+				}
+				
+				function handValue(cards) {
+					return(Math.max(checkFlush(cards), check4(cards) , straightScore(checkStraight(getUniqueCards(getRank(cards)))))); //just multiply straightCard here
+				}
+				
+				function checkFlush(cards) {
+					var suits = new Array(7);
+					var isFlush = false;
+					var flushSuit = -1;
+					var flushCards = new Array();
+					var straightCard = -1;
+					var tempScore = 0;
+					
+					
+					for(var i = 0; i < cards.length; i++) {
+						suits[i] = Math.floor(cards[i] / 13);
+					}
+					//check if there are 5 or more of same suit
+					for(var i = 0; i < 4; i++){
+						if(suits.filter(function(value) { return value == i}).length >= 5) {
+							isFlush = true;
+							flushSuit = i;
+						}
+					}
+					
+					if(isFlush) {  // there is a flush
+						//prompt("flush");
+						var j = 0;
+						var tempScore = score;
+						
+						for(var i = 0; i < cards.length; i++) {
+							if(suits[i] == flushSuit){
+								flushCards[j] = cards[i];
+								j += 1;
+							}
+						}
+						
+						flushCards = getRank(flushCards);
+						
+						straightCard = checkStraight(flushCards);
+						if(isFlush && straightCard > 0)
+						{
+						 tempScore = (straightCard + 4) / 14 * 400000000;
+						 if(tempScore > score){
+							winMessage = " straight flush " + getCardName(straightCard + 4) + " high";
+							score = tempScore;
+						 }
+						 return(tempScore);
+						}
+						flushCards = changeAce(flushCards);
+						tempScore = check4(flushCards) * 100000;
+						if(tempScore > score){
+							showCards(flushCards);
+							flushCards.sort(function(a,b){return b-a});
+							winMessage = " flush " + getCardName(flushCards[0] + 1) + " high";
+							score = tempScore;
+						 }
+						 
+						return(tempScore); //will get high card valuation since all flush have unique rank
+					}
+					return(0);
+				}
+				
+				function checkStraight(cards) {
+					var scards = new Array();
+					var isStraight = 0;
+					var straightCard = -1;
+					scards = getRank(cards);
+					scards.sort(function(a,b){return a-b});
+					straightCard = rowStraight(scards);
+					scards = changeAce(scards).sort(function(a,b){return a-b});					
+					straightCard = Math.max(rowStraight(scards), straightCard);					
+					return(straightCard);					
+				}
+				
+				function rowStraight(cards){
+					var straightCard = -1;
+					for(var i = 0; i < cards.length - 4; i++){ //check if in a row
+						
+						for (var j = 0; j < 4; j++) {
+							if(cards[i + j + 1] - cards[i + j] != 1) {
+								j = 6;
+							}
+						}
+						if(j == 4) { // straight
+							straightCard = cards[i];
+							
+						}					
+					}
+					return(straightCard + 1);
+				}
+				
+				function check4(cards){	//check for 4 of a kind
+					var fourRank = 0;
+					var threeRank = new Array();
+					var threeCount = 0;
+					var twoRank = new Array();
+					var twoCount = 0;
+					var oneRank = new Array();
+					var oneCount = 0;
+					var tempScore = score;
+					rcards = getRank(cards);
+					var maxKicker = 0;
+					//showcards(rcards);
+					for(var i = 0; i < 13; i++){
+						switch(rcards.filter(function(value) { return value == i}).length) {
+							case 4:
+							fourRank = changeAceValue(i);
+							break;
+							case 3:
+							threeRank[threeCount++] = changeAceValue(i);
+							break;
+							case 2:
+							twoRank[twoCount++] = changeAceValue(i);
+							break;
+							case 1:
+							oneRank[oneCount++] = changeAceValue(i);
+							break;
+						}
+					}
+					oneRank.sort(function(a,b){return b-a});
+					twoRank.sort(function(a,b){return b-a});
+					threeRank.sort(function(a,b){return b-a});
+					
+					
+					if (fourRank > 0) {					
+						maxKicker = Math.max(oneRank[0] || 0, twoRank[0] || 0, threeRank[0] || 0); // the || 0 turns NAN to 0 but leaves the value
+						tempScore = (fourRank + 1) / 13 * 20000000 + maxKicker / 13;
+						if(tempScore > score){
+							winMessage = " four of a kind " + getCardName(fourRank + 1) + "'s " + getCardName(maxKicker + 1) + " kicker";
+							score = tempScore;
+						 }
+						return(tempScore);
+					}
+					else if(threeCount == 2){
+						tempScore = ((threeRank[0] / 13) * 20 + threeRank[1] / 13) / 11 * 1000000;
+						if(tempScore > score){
+							winMessage = " full house " + getCardName(threeRank[0] + 1) + "'s full of " + getCardName(threeRank[1] + 1) + "'s";
+							score = tempScore;
+						 }
+						return(tempScore);
+					}
+					else if(threeCount == 1 && twoCount >= 1){						
+						tempScore = (threeRank[0] / 13 * 20 + twoRank[0] / 13)/11 * 1000000;
+						if(tempScore > score){
+							winMessage = " full house " + getCardName(threeRank[0] + 1) + "'s full of " + getCardName(twoRank[0] + 1) + "'s";
+						    score = tempScore;
+						 }
+						return(tempScore);
+					}
+					
+					else if(threeCount == 1){
+						tempScore = (threeRank[0] / 13 * 200 + oneRank[0] / 13 * 10 + oneRank[1] / 13) / 111 * 1000;
+						if(tempScore > score){
+							winMessage = " three of kind " + getCardName(threeRank[0] + 1) + "'s "+ getCardName(oneRank[0] + 1) + " kicker";
+							score = tempScore;
+						 }
+						return(tempScore);
+					}
+					else if(twoCount >= 2){
+						maxKicker = Math.max(oneRank[0] || 0, twoRank[2] || 0);
+						tempScore = (twoRank[0] / 13 * 200 + twoRank[1] / 13 * 10 + maxKicker / 13) / 111 * 100;
+						if(tempScore > score){
+							winMessage = " two pair " + getCardName(twoRank[0] + 1) + "'s and " + getCardName(twoRank[1] + 1) + "'s " + getCardName(maxKicker + 1) + " kicker";
+							score = tempScore;
+						 }
+						return(tempScore);
+					}
+					else if (twoCount == 1) {
+						tempScore = (twoRank[0] / 13 * 1000 + oneRank[0] / 13 * 100 + oneRank[1] / 13 * 10 + oneRank[2] / 13) / 1111 * 10;
+						if(tempScore > score){
+							winMessage = " one pair " + getCardName(twoRank[0] + 1) + "'s " + getCardName(oneRank[0] + 1) + " kicker";
+							score = tempScore;
+						 }
+						return(tempScore);
+					}
+					else {
+						tempScore = (oneRank[0] / 13 * 10000 + oneRank[1] / 13 * 1000 + oneRank[2] / 13 * 100 + oneRank[3] / 13 * 10 + oneRank[4] / 13) / 11111 * 1;
+						if(tempScore > score){
+							winMessage = " high card " + getCardName(oneRank[0] + 1) + " " + getCardName(oneRank[1] + 1) + " high";
+							score = tempScore;
+						 }
+						return(tempScore);
+						
+					}
+				}
+				
+				function straightScore(straightCard) {
+					
+					var tempScore = 0;
+					if(straightCard) {tempScore = (straightCard + 4) / 14 * 10000; }
+					if(tempScore > score){
+						winMessage = " straight " + getCardName(straightCard + 4) + " high";
+						score = tempScore;
+					}
+					return(tempScore);
+				}
+				
+				
+				function changeAce(cards){
+					for(var i = 0; i < cards.length; i++){
+						if (cards[i] == 0){
+							cards[i] = 13;
+						}
+					}
+					return(cards);
+				}
+				
+				function showCards(cards){
+					if (roundNum >= 4) {
+					for(var i = 0; i < cards.length; i++){
+						//alert("card " + i + " + is " + cards[i]);
+					}	
+					}					
+				}
+				
+				function getRank(cards){
+				var scards = new Array();
+					for(var i = 0; i < cards.length; i++){ //get rank
+						scards[i] = cards[i] % 13;						
+					}
+					return(scards);
+				}
+				
+				function getSuit(cards){
+				var scards = new Array();
+					for(var i = 0; i < cards.length; i++){ //get rank
+						scards[i] = Math.floor(cards[i] / 13);						
+					}
+					return(scards);
+				}
+				
+				function changeAceValue(n){
+					if(n == 0){
+						return(13);
+					}
+					else { return(n); }
+				}
+				
+				function getCardName(card){
+					if(card <= 10 && card >= 2){
+						return(card);
+					}
+					else {
+						switch(card) {
+							case 11:
+								return("jack");
+								break;
+							case 12:
+								return("queen");
+								break
+							case 13:
+								return("king");
+								break;
+							default:
+								return("ace");
+								break;
+						
+						}
+						
+					}
+				
+				}
+				
+				Array.prototype.getUnique = function(){
+					var u = {}, a = [];
+					for(var i = 0, l = this.length; i < l; ++i){
+						if(u.hasOwnProperty(this[i])) {
+							continue;
+						}
+						a.push(this[i]);
+						u[this[i]] = 1;
+					}	
+					return a;
+				}
+				
+				function getUniqueCards(cards){
+					var ucards = new Array();
+					var indy = -1;
+					for(var i = 0; i < cards.length; i++) {
+						indy = ucards.indexOf(cards[i]);
+						if(indy == -1){
+							ucards[ucards.length] = cards[i];
+						}				
+					}	
+					return(ucards);
+				}
+				
+				
+				function animateCard() {
+					var fly = document.getElementById("cardFly");
+					var i = 0;
+					var top = -10;
+					var left = -10;
+					var numJumps = 95; //number of jumps for animation
+					var  speedAdj = parseInt(getSpeedAdj());
+					togglePlayerButtons(0);
+					getCurCompHandValue(1);	//get comp percentile
+					getCurCompHandValue(0); //get player percentile	
+					
+					if(roundNum < 3) { getFutValue(); };
+					
+					
+					
+					betEachRound[roundNum - 1] = curCompBet;
+					roundNum++;
+					
+					var slopes = findSlope(numJumps);
+					fly.style.visibility = "visible";
+					var myInt = setInterval(function() {
+						i += 1;
+						top += slopes[1];
+						left += slopes[0];
+						fly.style.top = top + "px";
+						fly.style.left = left + "px";
+						if(i == numJumps){
+							clearInterval(myInt);
+							fly.style.visibility = "hidden";
+							makeCardVisible();
+							
+							//roundNum++;
+							
+							if (roundNum > 4) {
+								evaluateHands();
+									//document.getElementById("b1").style.visibility = "visible";
+									//insert to automate
+									
+									return(0);
+								}
+								determineTurn(); 
+								return(0);
+						}
+						
+					} , 13 - speedAdj * 1.1); //was 50
+				}
+				
+				function getSpeedAdj() {
+					return(document.getElementById("speedP").innerHTML.substring(7));				
+				}
+				
+				function decSpeed(){
+					var speed = parseInt(document.getElementById("speedP").innerHTML.substring(7));
+					document.getElementById("speedP").innerHTML = "Speed : " + Math.max(1,speed - 1);
+				}
+				
+				function incSpeed(){
+					var speed = parseInt(document.getElementById("speedP").innerHTML.substring(7));
+					document.getElementById("speedP").innerHTML = "Speed : " + Math.min(10, speed + 1);
+				}
+				
+			function makeCardVisible() {
+				
+				switch(roundNum - 1) {
+					case 1:
+							document.getElementById("card3").style.visibility="visible";
+							document.getElementById("card4").style.visibility="visible";
+							document.getElementById("card5").style.visibility="visible";
+							lastHandMessage[1] += "<p><br>Flop: " + cardToHtml(cardToString(allCards[2])) + " " +  cardToHtml(cardToString(allCards[3])) + " " + cardToHtml(cardToString(allCards[4])) + "<br></p>"; 
+							break;
+					case 2 :
+						document.getElementById("card6").style.visibility="visible";
+						lastHandMessage[1] += "<p><br>Turn: " + cardToHtml(cardToString(allCards[2])) + " " +  cardToHtml(cardToString(allCards[3])) + " " + cardToHtml(cardToString(allCards[4])) + " " + cardToHtml(cardToString(allCards[5])) + "<br></p>"; 
+						break;
+					case 3:
+						document.getElementById("card7").style.visibility="visible";
+						lastHandMessage[1] += "<p><br>River: "+ cardToHtml(cardToString(allCards[2])) + " " +  cardToHtml(cardToString(allCards[3])) + " " + cardToHtml(cardToString(allCards[4])) + " " + cardToHtml(cardToString(allCards[5])) + " " + cardToHtml(cardToString(allCards[6])) + "<br></p>"; 
+						break;
+				}
+			}
+		
+			
+			function computeProbs(cards) { //computes probabilities for computer
+			//var probs = [0, 0]
+				if(roundNum == 1) {
+					pscore = computePreflopProb(1);
+					pscorePlayer = computePreflopProb(0);
+					if(button == 1) { //comp has button
+					if(pscore < 63) { return([.8,.8]); }
+					else if(pscore < 72) { return([0, 0]); }
+					else if(pscore < 90) { return([0, 0]); }
+					else if(pscore < 100) { return([0, 0]); }
+					else if(pscore < 110) { return([0, 0]); }
+					else if(pscore < 130) { return([0, 0]); }
+					else if(pscore < 150) { return([0, 0]); }
+					else { return([0, 0]); }
+					}
+					else {
+					
+						if(pscore < 67) { return([1, 1]); }
+					else if(pscore < 75) { return([.6, 1]); }
+					else if(pscore < 85) { return([0, 1]); }
+					else if(pscore < 90) { return([0, 1]); }
+					else if(pscore < 100) { return([0, 1]); }
+					else if(pscore < 110) { return([0, 1]); }
+					else if(pscore < 130) { return([0, 0]); }
+					else if(pscore < 150) { return([0, 0]); }
+					else { return([0, 0]); }
+					
+					}										
+				}
+				return(0);
+			}
+			
+			
+			
+			function getSuitName(card) {
+				switch(card){
+					case 0:
+						return("c");
+						break;
+					case 1:
+						return("s");
+						break;
+					case 2:
+						return("d");
+						break;
+					case 3:
+						return("h");
+						break;
+				
+				}
+			}
+			
+			function computePreflopProb(who){
+				if(who == 1) {var cards = allCards.slice(7,9);}
+				else { var cards = allCards.slice(0,2);}
+				var rcards = changeAce(getRank(cards));
+				var scards = getSuit(cards);
+				
+				var tempScore = 0;
+				
+				var valueCards = [20,21,23,25,28,32,36,41,47,55,65,80,100];
+				
+				
+								
+				tempScore = valueCards[rcards[0] - 1] + valueCards[rcards[1] - 1];
+				if(rcards[0] == rcards[1]) { tempScore += 60; } //pair
+				if(scards[0] == scards[1]) { tempScore += 12; } //suited
+				if(Math.abs(rcards[0] - rcards[1]) == 1) { tempScore += 7; } //straight
+				if(Math.abs(rcards[0] - rcards[1]) == 2) { tempScore += 4; } //straight
+				if(Math.abs(rcards[0] - rcards[1]) > 5) { tempScore -= 7; } //too far apart
+							
+				
+				return(tempScore);
+			}
+			
+			
+			function getCurCompHandValue(who){
+				var board = allCards.slice(2, roundNum + 4)
+				if(who == 1) {	var cards = board.concat(allCards.slice(7,9));}
+				else { var cards = board.concat(allCards.slice(0,2));}
+				
+				var handv = handValue(cards);
+				var temp = 0;
+				var tempCards = [];
+				var winners = 0;
+				var totalTrials = 0;
+				
+				
+				//change to how many hands beat it
+				
+				for(var i = 0; i < 52; i++) {
+					if(cards.indexOf(i) != -1) {continue;}
+					for(var j = i + 1; j < 52; j++){ 
+						if(cards.indexOf(j) != -1) {continue;}
+						tempCards = board.concat([i, j]);
+						temp = handValue(tempCards);
+						if(handv > temp) { winners++; }
+						else if (handv == temp) { winners += 1; }
+						totalTrials++;
+					}
+				}
+				//prompt("percentile2 is " + (winners / totalTrials * 100) + " and sim percentile is " + percentile + " total trials is " + totalTrials);
+				if(who == 1 ) { percentile = winners / totalTrials * 100; compPerc[roundNum - 1] = percentile; }
+				else { playerPerc[roundNum - 1] = winners / totalTrials * 100; }
+				
+				generalCompProbs();				
+			}
+			
+			
+			function getFutValue() {
+				var boardCards = allCards.slice(2, roundNum + 4);
+				var compCards = allCards.slice(7, 9);
+				var cards = boardCards.concat(compCards);
+				var isFlush = false;
+				var isStraight = false;
+				var suits = [];
+				var cardRanks = getRank(compCards);
+				var scard = 0;
+				var numStraights = 0;
+				var check1 = false;
+				var check2 = false;
+				//don't look for straight draws on 4 flush boards
+				
+				for(var i = 0; i < cards.length; i++) {
+						suits[i] = Math.floor(cards[i] / 13);
+					}
+					
+					if(suits[suits.length - 1] == suits[suits.length - 2]) {
+					
+					//check if there are 5 or more of same suit
+						for(var i = 0; i < 4; i++){
+							if(suits.filter(function(value) { return value == i}).length == 4) {
+								isFlush = true;							
+							}
+						}
+					}
+					//if(isFlush) { alert("flush draw"); alert(suits);}
+					
+					for(var i = 0; i < 52; i++) {
+						check1 = false;
+						check2 = false;
+						if(cards.indexOf(i) == -1) { cardst = cards.concat(i);} else { continue; }
+						scard = checkStraight(getUniqueCards(getRank(cardst)));
+						if(scard == 0) {continue;} else {scard += 4; }
+						
+						if(Math.abs(scard - changeAceValue(cardRanks[0]))  <= 4 && Math.abs(scard - changeAceValue(cardRanks[1]))  <= 4) 
+						{  check1 = true; }
+						
+						if( Math.abs(scard - changeAceValue(cardRanks[0]))  <= 1 || Math.abs(scard - changeAceValue(cardRanks[1]))  <= 1)
+						{ check2 = true; }
+						
+						/*if(scard && ((Math.abs(scard - changeAceValue(cardRanks[0]))  <= 4 && Math.abs(scard - changeAceValue(cardRanks[1]))  <= 4)
+							|| ((Math.abs(scard - changeAceValue(cardRanks[0]))  <= 1) || (Math.abs(scard - changeAceValue(cardRanks[1]))  <= 1)))) {
+							numStraights++;
+						}*/
+						if(check1 || check2) { numStraights++;} // alert("scard is " + scard  + "  " + check1 + "   " + check2); }
+					}
+					
+					if(numStraights >= 8) { isStraight = true; }
+				//	if(isStraight) { alert("straight draw"); }	
+					if(isFlush || isStraight) { drawingHand = 1; }
+			}
+			
+			function twoOvers() {
+			
+				var boardCards = changeAce(getRank(allCards.slice(2, 5)));
+				var compCards = changeAce(getRank(allCards.slice(7, 9)));
+				
+				if(compCards[0] > boardCards.max() && compCards[1] > boardCards.max() && compCards.min() >=9) { overs = 1;}
+				
+			}
+			
+			
+			function initiateBluff() {
+					
+					if(Math.random() > .5) { bluff = 1;} // was .7
+				
+			}	
+			
+			
+			function generalCompProbs(){
+				var temp = numPlayerRaises[0];
+				if(button == 1) { numPlayerRaises[0] = Math.max(numPlayerRaises[0] - 1, 0); }	
+				
+				
+				if(percentile <= 30) { compProbs = [1, 1]; } // fold all bad hands
+				
+					else if(percentile < 40) { 
+						if (button == 1) {
+							compProbs = [1, 1];
+							if (numPlayerRaises[roundNum - 2] > 0 ) {compProbs[1] = 1;};
+						}
+						else {
+							compProbs = [1, 1];
+							if (numPlayerRaises[roundNum - 2] > 0 ) {compProbs[1] = 1;};
+						}
+					}
+					
+					else if(percentile < 45) { //if first to enter pot bet but don't raise
+						compProbs = [0, .7]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: if(betRound == 0) {compProbs = [0, .5];} else { compProbs = [1, 1];} break; // was compProbs = [.7, 1];
+								case 1: compProbs = [1, 1]; break;
+								case 2: compProbs = [1, 1]; /*alert("folding 40 - 50 percentile");*/ break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: if(betRound == 0) {compProbs = [0, .5];} else { compProbs = [1, 1];}  break; // was compProbs = [0, 1];
+								case 1: compProbs = [1, 1]; break;
+								case 2: compProbs = [1, 1]; /* alert("folding 40 - 50 percentile"); */ break;	
+							}
+						}
+					}
+					
+					
+					else if(percentile < 50) { //if first to enter pot bet but don't raise
+						compProbs = [0, .7]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: if(betRound == 0) {compProbs = [0, .5];} else { compProbs = [1, 1];} break; // was compProbs = [.2, 1];
+								case 1: compProbs = [1, 1]; break;
+								case 2: compProbs = [1, 1]; /*alert("folding 40 - 50 percentile");*/ break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: if(betRound == 0) {compProbs = [0, .5];} else { compProbs = [.8, 1];}  break; // was compProbs = [0, 1];
+								case 1: compProbs = [1, 1]; break;
+								case 2: compProbs = [1, 1]; /* alert("folding 40 - 50 percentile"); */ break;	
+							}
+						}
+					}
+						
+					else if(percentile < 60) { 
+						compProbs = [0, .7]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: if(betRound == 0) {compProbs = [0, .5];} else { compProbs = [.7, 1];}  break; // was compProbs = [0, .5];
+								case 1: compProbs = [.5, 1]; break; // was [0, 1]
+								case 2: compProbs = [1, 1]; break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: if(betRound == 0) {compProbs = [0, .5];} else { compProbs = [1, 1];}  break; // was compProbs = [0, .5];
+								case 1: compProbs = [.5, 1]; break; // was [0, 1]
+								case 2: compProbs = [1, 1]; break;	
+							}
+						}
+					}
+					
+					else if(percentile < 70) { 
+						compProbs = [0, .6]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, .2]; break;
+								case 1: compProbs = [0, 1]; break;
+								case 2: compProbs = [0, 1]; break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, .2]; break;
+								case 1: compProbs = [0, 1]; break;
+								case 2: compProbs = [0, 1];	break;
+						
+							}
+						}
+					}
+					
+					else if(percentile < 77) { 
+						compProbs = [0, .6]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, .2]; break;
+								case 1: compProbs = [0, 1]; break;
+								case 2: compProbs = [0, 1]; break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, .2]; break;
+								case 1: compProbs = [0, 1]; break;
+								case 2: compProbs = [0, 1];	break;
+						
+							}
+						}
+					}
+						
+					else if(percentile < 82) { 
+						compProbs = [0, .5]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, .15]; break;
+								case 1: compProbs = [0, .7]; break;
+								case 2: compProbs = [0, 1];	break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, .15]; break;
+								case 1: compProbs = [0, .7]; break;
+								case 2: compProbs = [0, 1];	break;	
+							}
+						}
+					}
+					
+					
+					else if(percentile < 87) { 
+						compProbs = [0, .3]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, 0]; break;
+								case 1: compProbs = [0, .5]; break;
+								case 2: compProbs = [0, .8]; break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+							case 0: compProbs = [0, 0]; break;
+							case 1: compProbs = [0, .5]; break;
+							case 2: compProbs = [0, .8]; break;						
+							}
+						}
+					}
+					
+					else if(percentile < 94) { 
+						compProbs = [0, .3]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, 0]; break;
+								case 1: compProbs = [0, .4]; break;
+								case 2: compProbs = [0, .6]; break;						
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, 0]; break;
+								case 1: compProbs = [0, .4]; break;
+								case 2: compProbs = [0, .6]; break;						
+							}						
+						}
+						
+					}
+					
+					else { 
+						compProbs = [0, .2]; 
+						if(button == 1) {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, 0]; break;
+								case 1: compProbs = [0, .2]; break;
+								case 2: compProbs = [0, .3]; break;							
+							}
+						}
+						else {
+							switch(numPlayerRaises[roundNum - 2]){
+								case 0: compProbs = [0, 0]; break;
+								case 1: compProbs = [0, .2]; break;
+								case 2: compProbs = [0, .3]; break;	
+							}
+						}
+					}
+					numPlayerRaises[0] = temp;
+					
+			}
+			
+			function getCurCompCards(cards) {
+				var num = roundNum + 2;
+				for(var i = 0; i < num; i++) {
+					cards[i + 2] = allCards[i + 2];
+				}
+				return(cards);
+			}
+			
+			function probAdjustment() {
+				//make diff rules for flop. calling more frequently with monsters
+				
+				if (roundNum > 1) {generalCompProbs();}
+				//if (roundNum >= 2 && roundNum <= 3) { getFutCompHandValue(); } ;
+				if (pot >= 100 && percentile > 42) { compProbs[0] = 0; }
+				if (pot >= 120 && percentile > 30) { compProbs[0] = 0; }						//never fold large pots
+				if (pot >= 160 && percentile > 20) { compProbs[0] = 0; }
+				if (pot >= 200) { compProbs[0] = 0; }	
+				
+				if (roundNum == 1) {
+					if (betRound > 2) {compProbs[0] = 0; }		//call to see flop if already raised pre
+					if (betRound >= 2 && pscore < 120) { compProbs[1] = 1; }		//should i clamp down pf
+					if (curCompBet >= 10 && button == 1) {compProbs[0] = 0; } //call if limped in				
+				}				
+				
+				
+				if (roundNum == 2){
+				
+					if (percentile >= 60) { bluff = 0; }
+					
+					if (betRound == 0) {
+					
+						if (numCompRaises[0] == 2) { compProbs = [0, 0]; }	//always bet flop after 4 betting pf
+						if (lastRaise[0] == 1) {  compProbs = [0, 0]; } //always bet flop after 3 betting
+						
+						if (button == 1) {
+							if (lastRaise[0] == 0) {compProbs = [0, Math.min(.5, compProbs[1])];} //increase chance of raising flop when on button	when player has lead pf and checks flop						
+							if (bluff && Math.random() > .8) { compProbs = [0, 0]; } //	
+						}
+						
+						if (button == 0) {
+							if (percentile < 85 && Math.random() < .9 && lastRaise[0] == 0) { compProbs = [1, 1];} //check when first to act when player has lead
+							if (percentile >= 85 && Math.random() < .7 && lastRaise[0] == 0) { compProbs = [1, 1];} //keep checking to induce bets				
+							if (bluff && Math.random() > .8) { compProbs = [0, 0]; } //donk bluff	
+						}												
+					}
+					
+					if (betRound == 1){
+						if (button == 1) {							
+							if (percentile > 50 && Math.random() > .3) { compProbs = [0, 0]; }	//raise more with decent hands
+							if (bluff) { compProbs = [0, 0]; }
+							if (bluff && Math.random() < .2) { compProbs = [0, 1]; } //call to bluff the turn
+						}
+						if (button == 0) {
+							if (percentile > 70 && Math.random() > .4) { compProbs = [0, 0]; } //raising more with decent hands
+							if (bluff && Math.random() > .5) { compProbs = [0, 0]; } //bluff less often oop			
+						}				
+						if (overs && percentile > 35 && Math.random() > .2) { compProbs[0] = 0; } //sometimes call with overs
+					}
+					
+					if (betRound == 2){
+						if (button == 1) {						
+							if (percentile < 80) { compProbs[1] = 1; }	//slow down, do not 3 bet
+							if (bluff && Math.random() > .4) { compProbs = [0, 0]; }								
+						}
+						if (button == 0) {
+							if (percentile < 85) { compProbs[1] = 1; }	//slow down, do not 3 bet							
+							if (bluff && Math.random() > .5) { compProbs = [0, 0]; }												
+						}			
+						if (overs && percentile > 35 && Math.random() > .6) { compProbs[0] = 0; } //sometimes call with overs
+					
+					}
+					
+					
+					if (betRound == 3){
+						if (button == 1) {						
+							if (percentile < 80) { compProbs[1] = 1; }	//slow down, do not 3 bet
+							if (bluff && Math.random() > .4) { compProbs = [0, 0]; } //4-bet bluff							
+						}
+						if (button == 0) {
+							if (percentile < 85) { compProbs[1] = 1; }	//slow down, do not 3 bet							
+							if (bluff && Math.random() > .5) { compProbs = [0, 0]; } //4-bet bluff											
+						}			
+						if (overs && percentile > 35) { compProbs[0] = 0; } //call with overs					
+					}
+					
+					if (betRound == 4){						
+						if (bluff) { compProbs = [1, 1]; } //finally fold bluff	
+						if (percentile < 60) { compProbs = [1, 1]; }
+						if (overs) { compProbs[0] = 0; } //call with overs						
+					}								
+				}
+				
+				
+				if (roundNum == 3){
+					if (percentile >= 60) { bluff = 0; }
+					//if (lastRaise[1] == 1 && numPlayerRaises[2] == 2) { bluff = 0; } //turn bluff off if called 4 betting
+					
+					if(betRound == 0) {
+						if (button == 1) { //comp has button
+							if (numCompRaises[1] == 2 && percentile > 96.5) { compProbs = [0, 0]; } //bet with monster
+							if (numCompRaises[1] <= 1 && pot <= 100) { compProbs = [0, Math.min(.5, compProbs[1])];  } //increase chance of betting with air
+							//if (lastRaise[1] == 1 && numPlayerRaises[1] <= 1 && percentile > 75 && Math.random() > .4) { compProbs = [0, 0]; }
+							if (lastRaise[1] == 1) { compProbs = [0, 0]; } //always bet after having lead on flop on button
+							if (bluff == 0 && percentile < 60 &&  Math.random() < .4) { compProbs = [0, 1]; } // check behind occasionally with mediocre hands
+							if (bluff && lastRaise[1] == 1 && Math.random() < .8) { compProbs = [0, 0]; } // keep bluffing almost always
+						}
+						if (button == 0) { //player has button
+							if (percentile < 85 && Math.random() < .9 && lastRaise[1] == 0 && numCompRaises[1] < 2) { compProbs = [1, 1];} //check when first to act when player has lead
+							if (percentile >= 85 && Math.random() < .7 && lastRaise[1] == 0 && numCompRaises[1] < 2) { compProbs = [1, 1];} //keep checking to induce bets						
+							if (lastRaise[1] == 0 && percentile < 77) { compProbs = [1, 1]; } //check when player is in lead
+							if (compPerc[1] - compPerc[0] > 15 && lastRaise[1] == 0 && numPlayerRaises[1] > 0) { compProbs = [1, 1]; } //check-raise if backed into hand and player has lead
+							
+							if (lastRaise[1] == 1 && numPlayerRaises[1] <= 2 && percentile > 60) { compProbs = [0, 0]; } //always bet with lead oop with decent hand
+							//if (lastRaise[1] == 1 && numPlayerRaises[1] == 2 && percentile > 80) { compProbs = [0, 0]; } //always bet with lead oop with decent hand
+							
+							if (bluff && lastRaise[1] == 1) { compProbs = [0, 0]; }
+						}					
+					}
+					
+					if(betRound == 1) {
+						if (percentile < 82) { compProbs[1] = 1; }	//slow down, do not raise
+						if (percentile < 86 && numPlayerRaises[1] == 1) { compProbs[1] = 1; } //never raise turn against strong player hand		
+						if (percentile < 89 && numPlayerRaises[1] == 2) { compProbs[1] = 1; } //never raise turn against strong player hand									
+					}
+					
+					if(betRound == 2) {
+						if (percentile < 92) { compProbs[1] = 1; }	//slow down, do not 3 bet
+						if(percentile < 94 && numPlayerRaises[1] == 2) { compProbs[1] = 1; } //slow down, don't three bet									
+					}			
+					
+					if (betRound == 3) {
+						if (percentile < 96.5) { compProbs[1] = 1; }	//slow down, do not 4 bet				
+						if(percentile < 97.5 && numPlayerRaises[1] == 2) { compProbs[1] = 1; } //slow down, don't 4 bet
+					}
+					
+					if (betRound == 4){
+						compProbs = [0, 1];
+					}					
+				}				
+				
+				
+				if (drawingHand && roundNum < 4) { compProbs[0] = 0; }
+				
+				
+				if (roundNum == 4) { 
+					if(percentile > 94) { compProbs = [0,0]; } //raise all the way
+					
+					if(betRound == 0) {
+						if(bluff && lastRaise[2] == 1) { compProbs = [0, 0]; }
+						if(button == 0) {
+							if (percentile < 85 && Math.random() < 1 && lastRaise[2] == 0 && numCompRaises[2] < 2) { compProbs = [1, 1];} //check when first to act when player has lead
+							if (percentile >= 85 && Math.random() < .7 && lastRaise[2] == 0 && numCompRaises[2] < 2) { compProbs = [1, 1];} //keep checking to induce bets
+							if (compPerc[2] - compPerc[1] > 15 && lastRaise[2] == 0 && numPlayerRaises[2] > 0) { compProbs = [1, 1]; } //check-raise if backed into hand and player has lead							
+						}
+						if (button == 1) {						
+							if (percentile > 50 && numPlayerRaises[2] == 0) { compProbs = [0,0];} //make sure to bet if checked to on river
+							if (percentile > 66 && numPlayerRaises[2] == 1) { compProbs = [0,0];} //make sure to bet if checked to on river
+							if (percentile > 80 &&  numPlayerRaises[2] == 2) { compProbs = [0,0];} //make sure to bet if checked to on river					
+							if (lastRaise[2] == 1 && percentile > 55) { compProbs = [0,0]; }
+							if (pot <=80 && lastRaise[2] == -1 && Math.random() < .4 && percentile < 25) { compProbs = [0, 0]; }
+						}
+					}
+										
+					if (betRound == 1) {
+						if(percentile < 85) { compProbs[1] = 1; } //never raise river with weakish hand
+						if(percentile < 88 && numPlayerRaises[2] == 1) { compProbs[1] = 1; } //never raise river against strong player hand
+						if(percentile < 90 && numPlayerRaises[2] == 2) { compProbs[1] = 1; } //never raise river against strong player hand
+						if (percentile > 91 && numPlayerRaises[2] < 2) { compProbs = [0, 0]; } //make sure to raise
+					}
+					
+					if(betRound == 2){
+						if (percentile < 92) { compProbs[1] = 1; }	//slow down, do not 3 bet
+						if(percentile < 95 && numPlayerRaises[2] >= 1) { compProbs[1] = 1; } //slow down, don't three bet
+					}
+					
+					if (betRound == 3) {
+						if (percentile < 96.5) { compProbs[1] = 1; }	//slow down, do not 4 bet				
+						if(percentile < 98 && numPlayerRaises[2] >= 1) { compProbs[1] = 1; } //slow down, don't 4 bet
+					}
+					//maybe change above line based on lastraise				
+				}
+			}
+			
+			function findSlope(n) {
+				//var rect = totalPot.getBoundingClientRect();
+				var rect = totalPot.getBoundingClientRect();
+				//return([(rect.left * .7 + 10) / n, (rect.top + 10) / n]);
+				return([(rect.left - 200) / n, (rect.top - 20) / n]);
+			}
+			
+			
+				
+			
+			function enterHand(potValue){
+				var returnString = getPhpString(potValue);
+				if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp=new XMLHttpRequest();
+				}
+				else{// code for IE6, IE5
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				/*xmlhttp.onreadystatechange=function()
+					{
+						if (xmlhttp.readyState==4 && xmlhttp.status==200)
+						{
+							//document.getElementById("phpReturn").innerHTML=xmlhttp.responseText;
+						}
+					}
+				*/
+				
+				xmlhttp.open("GET","insertHHdev.php?q="+returnString,true);
+				xmlhttp.send();
+			}
+			
+			function getPhpString(potValue) {
+				var returnString = "" + potValue +",";
+				var showdown = 0;
+				returnString = returnString + cardToString(allCards[7]) + "," + cardToString(allCards[8]) + ",";
+				switch(roundNum) {
+					case 5:
+						returnString = returnString + cardToString(allCards[2]) + "," + cardToString(allCards[3]) + "," + cardToString(allCards[4]) + "," + cardToString(allCards[5]) + "," + cardToString(allCards[6]) + ",";
+						break;
+					case 4:
+						returnString = returnString + cardToString(allCards[2]) + "," + cardToString(allCards[3]) + "," + cardToString(allCards[4]) + "," + cardToString(allCards[5]) + "," + cardToString(allCards[6]) + ",";
+						break;
+					case 3:
+						returnString = returnString + cardToString(allCards[2]) + "," + cardToString(allCards[3]) + "," + cardToString(allCards[4]) + "," + cardToString(allCards[5]) + ",,";
+						break;
+					case 2:
+						returnString = returnString + cardToString(allCards[2]) + "," + cardToString(allCards[3]) + "," + cardToString(allCards[4]) + ",,," ;
+						break;
+					case 1:	
+						returnString = returnString + ",,,,,"
+				}		
+	
+				if (curCompBet == curPlayerBet) {					
+					showdown = 1;
+				}
+				returnString = returnString + cardToString(allCards[0]) + "," + cardToString(allCards[1]) + ",";
+				
+				
+				returnString = returnString + Math.abs(1 - button) + "," + Math.floor(percentile) + "," + showdown;
+				//alert('fbName is ' + fbName + '   fbID is ' + fbID);
+				
+				for(var i = 0; i < 4; i++){
+					returnString = returnString + "," + numCompRaises[i] + "," + numPlayerRaises[i] + "," + lastRaise[i] + "," + betEachRound[i];
+				}
+				returnString += ',' + handNum + ',' + pscore + ',' + pscorePlayer + ',' + compPerc[0] + ',' + playerPerc[0]  + ',' + compPerc[1] + ',' + playerPerc[1]  + ',' + compPerc[2] + ',' + playerPerc[2] + ",'" + fbName + "'," + fbID + ',' + playerStartHandChips + ',' + 0;
+				//add in preflop scores and percentiles
+				
+				
+				//document.getElementById("sqlString").innerHTML = returnString;
+				return returnString;
+			}
+			
+			function cardToString(cdNum) {
+			var rankNum = cdNum % 13;
+			var suitNum = Math.floor(cdNum / 13);
+			var rankString = "";
+			var suitString = "";
+			
+			switch(rankNum) {
+				case 9:
+					rankString = "T";
+					break;
+				case 10:
+					rankString = "J";
+					break;
+				case 11:
+					rankString = "Q";
+					break;
+				case 12:
+					rankString = "K";
+					break;
+				case 0:
+					rankString = "A";
+					break;
+				default:
+					rankString = "" + (rankNum + 1);
+			}
+			switch(suitNum){
+				case 0:
+					suitString = "c";
+					break;
+				case 1:
+					suitString = "s";
+					break;
+				case 2:
+					suitString = "h";
+					break;
+				case 3:
+					suitString = "d";
+					break;
+			}
+				
+			return(rankString + suitString);
+			}
+			
+			function cardToHtml(cd) {
+				switch(cd[1]) {
+					case "c":
+					return(cd[0] + '&clubs;');
+						break;
+					case "s":
+						return(cd[0] + '&spades;');
+						break;
+					case "h":
+						return('<span style = "color:red">' + cd[0] + '&hearts;</span>');
+						break;
+					case "d":
+						return('<span style = "color:red">' + cd[0] + '&diams;</span>');
+						break;
+				
+				
+				
+				}
+			
+			
+			}
+			
+			function congratPlayer() {
+			
+				if(compChips <= 0) {
+					alert("Congratulations!!! You beat the computer. Maybe you are good enough to play for real money.... ");
+					alert("Computer will now rebuy to 1000 chips");
+					compChips = 1000;
+				}
+				else {
+				alert(".....Unfortunately the computer has taken all your chips. Keep playing to get better.");
+				alert("You will now be back up to 1000 chips");
+				playerChips = 1000;
+				}
+			}
+			
+			function handHistory() {
+				var myWindow = window.open("","Hand History","width=500,height=500");
+				myWindow.document.body.innerHTML = "";
+				myWindow.document.write(lastHandMessage[0]);
+			}
+			
+			
+			Array.prototype.max = function(){
+				return Math.max.apply(null, this);
+			}
+			
+			Array.prototype.min = function(){
+				return Math.min.apply(null, this);
+			}
+			
+			
+			window.onload = function() { 
+			
+							//alert("page is loaded");
+				/*var rank = 0;
+				var suit = 0;
+				var id = document.getElementById("card2");
+				rank = 13 % 13 * -73;
+				suit = Math.floor(13 / 13) * -98;	
+				id.style.margin = suit + "px 0px 0px " + rank + "px";	*/
+				
+				var id = document.getElementById("card2");
+				id.style.width = "100%";
+				id.style.height = "100%";	
+			
+				
+			
+//IE 8 updated function for array filter			
+			if (!Array.prototype.filter)
+{
+  Array.prototype.filter = function(fun /*, thisp */)
+  {
+    "use strict";
+
+    if (this === void 0 || this === null)
+      throw new TypeError();
+
+    var t = Object(this);
+    var len = t.length >>> 0;
+    if (typeof fun !== "function")
+      throw new TypeError();
+
+    var res = [];
+    var thisp = arguments[1];
+    for (var i = 0; i < len; i++)
+    {
+      if (i in t)
+      {
+        var val = t[i]; // in case fun mutates this
+        if (fun.call(thisp, val, i, t))
+          res.push(val);
+      }
+    }
+
+    return res;
+  };
+}
+
+if (!Array.prototype.indexOf)
+{
+  Array.prototype.indexOf = function(elt /*, from*/)
+  {
+    var len = this.length >>> 0;
+
+    var from = Number(arguments[1]) || 0;
+    from = (from < 0)
+         ? Math.ceil(from)
+         : Math.floor(from);
+    if (from < 0)
+      from += len;
+
+    for (; from < len; from++)
+    {
+      if (from in this &&
+          this[from] === elt)
+        return from;
+    }
+    return -1;
+  };
+}
+	}		
+		</script>
+	
+		<!--<canvas id="thecanvas" height = "1000" width = "1400"></canvas>-->
+		<p id="header">Limit Hold'em Heads-Up Poker</p>
+		<!--<p id = "perc" style ="text-align:center";>Percentile is "</p>-->
+		
+		<div class = "bigDiv">
+		<div class = "rightBet" ><p id = "compBet">Computer Bet: 0</p></div>
+		<div class ="compCard">
+	
+		<div class = "crop">
+			<img id = "card8" alt = "compcard" src = "card_back.png"/>
+		</div>
+		<div class = "crop">
+			<img id = "card9" alt = "compcard" src = "card_back.png"/>
+		</div>
+		<div class = "divButton">
+			<img id = "imgButtonComp" alt = "button" src = "button.jpg" />
+		</div>
+		
+		</div>
+		
+		<div class = "rightBet" ><p id = "totalCompChips">Chips: 1000</p></div>
+		
+		</div>
+		<!--
+		
+		 -->
+		<div class = "lilDiv" style = "margin:0px;">
+		<!--<div id = "compMessageDiv"> -->
+			<p id = "compMessage" style = "margin:0px;"></p>
+		
+		</div>
+		
+		
+		<div class = "bigDiv">
+		<div class = "farRight"></div>
+		<div class = "rightBet" >
+		<!--<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>-->
+		
+		<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="true" data-auto-logout-link="true">			
+		</div>
+		
+	
+		
+			<button type="button" onclick="startPlay()" id = "b2" >Begin Playing</button>
+			
+			
+		</div>
+		<div class = "board">
+		<div class = "crop">
+			<img id ="card3" alt = "boardcard" style = "visibility:hidden" src="allcards.png" />
+		</div>
+		<div class = "crop">
+			<img id = "card4" alt = "boardcard" style = "visibility:hidden" src="allcards.png" />
+		</div>
+		<div class = "crop">
+			<img id = "card5" alt = "boardcard" style = "visibility:hidden" src="allcards.png" />
+		</div>
+		<div class = "crop">
+			<img id = "card6" alt = "boardcard" style = "visibility:hidden" src="allcards.png" />
+		</div>
+		<div class = "crop">
+			<img id = "card7" alt = "boardcard" style = "visibility:hidden" src="allcards.png" />
+		</div>
+		</div>
+		<div class = "rightBet" ><p id = "totalPot">Total Pot: 0</p>
+			<p id = "handHistory"><button onclick = "handHistory()">Click to view last hand history</button></p>			
+		</div>
+			<div class = "farRight">
+				<div class = "speedButton"><button onclick = "incSpeed()" id ="incButton">Increase Speed</button></div>
+				<p id = "speedP">Speed: 5</p>
+				<div class = "speedButton"><button onclick = "decSpeed()" id ="decButton">Decrease Speed</button></div>
+			</div>
+		</div>
+		
+		<div class = "tinyDiv">
+			<p id = "playerMessage">Welcome!!!! Press 'Begin Playing' to begin heads-up play</p>
+		</div>
+		
+		<div class = "bigDiv">
+		<div class = "rightBet">	
+			<p id = "playerBet">Player Bet: 0</p>
+			<p id = "seeStats"><a href = "Stat_Page.html" target = "_blank">Click to see your stats</a>
+		</div>
+		<div class = "compCard">
+		<div class = "crop">
+			<img id ="card" alt = "playercard" src="allcards.png" />
+		</div>
+		<div class = "crop">
+			<img id = "card2" alt = "playercard" src="aceofsteaks.png" />			
+		</div>	
+		<div class = "divButton">
+			<img id = "imgButtonPlayer" alt = "button" src = "button.jpg" />
+		</div>
+		</div>
+		<div class = "rightBet" >			
+			<p id = "totalPlayerChips">Chips: 1000</p>
+			<p id = "handCounter" style = "visibility:hidden; margin:0px;">Hand # 1</p>
+			<!-- <div class = "farRight" id = "handCounter">Hand # 1</div> -->
+		</div>
+		</div>
+		
+		
+		<div class = "medDiv">
+			<div class = "bbutton"><button type="button" onclick="fold()" id = "bfold" >Fold</button></div>
+			<div class = "bbutton"><button type="button" onclick="call()" id = "bcall" >Call</button></div>
+			<div class = "bbutton"><button type="button" onclick="raise()" id = "braise" >Raise</button></div>
+		</div>
+		<!--<div class = "tinyDiv" style = "margin-top:0em; width:100%;">
+			<button type="button" onclick="startPlay()" id = "b1" >Start next hand</button>
+		</div>	-->
+		<!--<div class = "tinyDiv" id ="sqlString">
+			
+		</div>		
+		<div class = "tinyDiv" id ="phpReturn"> reponse
+			
+		</div> -->
+		<div class = "fblike"> 
+			<div class="fb-like" data-send="true" data-width="450" show-faces="false"></div>
+			<!--<div>Disclaimer: This app tracks stats with your facebook name and ID. Log out to prevent this from happening.</div>-->
+			<!--<button type = "button" onclick ="manualFBLogin()" id = "manualLog">Log in manually</button>-->
+		</div> 
+		<img id = "cardFly" alt = "cardfly" src = "card_back.png"/>
+		
+	</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="stylesheetStat.css"/>
+	</head>
+	
+	<body>
+	<p id="header">Your Limit Hold-em Stats against the Computer</p>	
+	<div id ="phpReturn"> stats go here </div>
+	</body>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script>
+	google.load("visualization", "1", {packages:["corechart"]});
+	window.onload = function() {
+	//alert("stat page");
+	showUser("a");
+	
+	}
+	
+	function showUser(str){
+			//prompt("must be in here");
+				/*if (str==""){		
+					//document.getElementById("txtHint").innerHTML="";
+					return;
+				} */
+				if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp=new XMLHttpRequest();
+				}
+				else{// code for IE6, IE5
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xmlhttp.onreadystatechange=function(){
+					//alert("howdy");
+					if (xmlhttp.readyState==4 && xmlhttp.status==200){
+						document.getElementById("phpReturn").innerHTML=xmlhttp.responseText;
+						showUserGraph("a");
+						//alert(xmlhttp.responseText);
+					}				
+				}
+				xmlhttp.open("GET","getuser.php?q="+str,true);
+				xmlhttp.send();
+	}
+	
+	function drawChart(userData) {
+		var score = 0;
+		var dataArray = [
+          ['HandNum', 'Score']        
+        ];
+		for(var i = 0; i < userData.length ; i++) { //userData.length
+			score +=  Number(userData[i]);
+			dataArray.push([i, score]);
+		}
+		
+        var data = google.visualization.arrayToDataTable(dataArray);
+		
+		
+        var options = {
+          title: 'Your Overall Performance',
+		  explorer: {options:['dragToPan', 'rightClickToReset'] }
+        };
+		 
+		
+		
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+	  
+	  
+	  
+	  function showUserGraph(str){
+	
+				/*if (str==""){		
+					//document.getElementById("txtHint").innerHTML="";
+					return;
+				} */
+				if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp=new XMLHttpRequest();
+				}
+				else{// code for IE6, IE5
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xmlhttp.onreadystatechange=function(){
+					
+					if (xmlhttp.readyState==4 && xmlhttp.status==200){
+						var userScores=xmlhttp.responseText;
+						var scoreArray = userScores.split(",");
+						drawChart(scoreArray);
+						//alert(userScores);
+						//document.getElementById('phpReturn').innerHTML = userScores;
+						
+						
+					}				
+				}
+				xmlhttp.open("GET","getUserScores.php?q="+str,true);
+				xmlhttp.send();			
+				
+	}
+	
+	</script>
+	
+</html>
