@@ -26,6 +26,7 @@
 	white-space:nowrap;
 }
 .medDiv {
+	margin-top: 10px;
 	text-align:center;
 	height:4.5em;
 }
@@ -39,6 +40,10 @@
 	height:2.5em;
 }
 
+.veryTinyDiv {
+	text-align:center;
+	height:1em;
+}
 
 
 .board {	
@@ -92,7 +97,33 @@
 
 .fblike {
 	text-align:center;
+	overflow: hidden;
+	display: inline-block;
+	position: relative;
+	width:275px;
+	vertical-align: top;
 }
+
+.fbLikeRight {
+	
+	text-align:left;
+	display: inline-block;
+	width:270px;
+	height: 100px;
+	position:relative;
+	bottom: 50px;
+
+}
+.fb-login-button {
+	margin-left: 0px;
+}
+
+.allButtons {
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
 
 #b1 {
 	
@@ -190,7 +221,9 @@ visibility:hidden;
 	text-align: center;
 	font-family: Garamond, serif;
 	font-size: 3em;
+	color:red;
 }
+
 
 
 #seeStats {
@@ -206,20 +239,30 @@ visibility:hidden;
 
 .speedButton {
 	text-align:center;
-	width:100%;	
+	width:55%;	
 }
 
-#decButton {
-	width:100%;
+.speedButtonDown {
+	text-align:center;
+	width:55%;	
 }
 
-
-#incButton {
-	width:100%;
+#upButton {
+	max-width:10%;
+	cursor: pointer;
 }
+
+#downButton {
+	max-width:10%;
+	transform: rotate(180deg);
+	cursor: pointer;
+}
+
 
 #speedP {
 	font-size:1.5em;
+	width: 50%;
+	margin-top: 5px;
 }
 
 a {	
@@ -252,8 +295,43 @@ span {
 }
 
 body {
-	background-color: green;
+	color: #000;
 	}
 	
-	
 
+#linkedin_icon {
+	height: 32px;
+}
+
+#twitter_icon {
+	margin-left: 10px;
+	margin-top: 16px;	
+}
+
+#linkedin_icon {
+	margin-left: -30px;
+}
+
+.fb-like {
+	margin-top: 20px;
+}
+
+.container-fluid {
+	background: #ba1e2e; 
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#111), color-stop(100%,#D00)); /* safari */
+	background: -webkit-linear-gradient(top, #111 0%, #D00 100%);
+	background: -moz-linear-gradient(top, #111 0%, #D00 100%); /* mozilla */
+	background: -o-linear-gradient(top, #111 0%, #D00 100%); /* opera */
+	background: -ms-linear-gradient(top, #111 0%, #D00 100%); /* explorer */
+	background: linear-gradient(top, #111 0%, #D00 100%);
+	filter: progid:dXImageTransform.Microsoft.gradient (startcolorstr = "#111", endcolorstr = "#D00", GradientType = 0);
+	position: fixed;
+	top:0;
+	left:0;
+	/*height: 85px;*/
+	z-index: 1000;
+	width:100%;
+}
+.btn-link {
+	color:red;
+}

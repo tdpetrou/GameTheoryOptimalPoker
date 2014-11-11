@@ -4,8 +4,23 @@
 		<meta property="og:image" content="preview.png"/>
 		<meta property="og:image:type" content="image/png">
 		<!--<link rel="image_src" href="preview.png"/>-->
+
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	   
+	    <!-- Bootstrap -->
+	    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
 		<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
+		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      	<!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/jquery-2.1.1.min.js"></script> -->
+      	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 		<title>Limit Heads-Up</title>
+
+       <!-- twitter stuff -->
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 		<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -18,13 +33,16 @@
 </script>
 		
 	</head>
-	<body>
+	<body background="greenbyrequest.png">
+	<!-- <body background="green_background.jpg" text="white"> -->
 	<div id="fb-root"></div>
 		<script>
+
+
  window.fbAsyncInit = function() {
  //alert("FB is loaded");
   FB.init({
-    appId      : '482632948508288',
+    appId      : '706390152732478',
     status     : true, // check login status
     cookie     : true, // enable cookies to allow the server to access the session
     xfbml      : true  // parse XFBML
@@ -71,9 +89,27 @@
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=482632948508288";
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=706390152732478";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
+
+
+  // (function(d, s, id){
+  //    var js, fjs = d.getElementsByTagName(s)[0];
+  //    if (d.getElementById(id)) {return;}
+  //    js = d.createElement(s); js.id = id;
+  //    js.src = "//connect.facebook.net/en_US/sdk.js";
+  //    fjs.parentNode.insertBefore(js, fjs);
+  //  }(document, 'script', 'facebook-jssdk'));
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=706390152732478&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
 
 
 //var auth_response_change_callback = function(response) {
@@ -681,7 +717,7 @@ function drawEllipse(ctx, x, y, w, h) {
 						lastHandMessage[1] += "Computer Chips: " + compChips + "<br></p>"; 
 						lastHandMessage[0] = lastHandMessage[1] + lastHandMessage[0];
 						//document.getElementById("b1").style.visibility = "visible";
-						document.getElementById("bcall").innerHTML = "Start Next Hand";
+						document.getElementById("bcall").innerHTML = "Next Hand";
 						document.getElementById("bcall").style.visibility = "visible";
 						enterHand(compChips - compStartHandChips);
 					}
@@ -689,7 +725,7 @@ function drawEllipse(ctx, x, y, w, h) {
 				
 				function call() {
 				
-					if(document.getElementById("bcall").innerHTML == "Start Next Hand") { 
+					if(document.getElementById("bcall").innerHTML == "Next Hand") { 
 						document.getElementById("bcall").innerHTML = "Call";
 						startPlay();
 						return(0);
@@ -873,7 +909,7 @@ function drawEllipse(ctx, x, y, w, h) {
 								clearInterval(myInt);										
 								//if (continueHand()){ playerTurn(); }	
 								//document.getElementById("b1").style.visibility = "visible";	
-								document.getElementById("bcall").innerHTML = "Start Next Hand";
+								document.getElementById("bcall").innerHTML = "Next Hand";
 								document.getElementById("bcall").style.visibility = "visible";								
 							}
 							} , 14 - speedAdj * 1.2);						
@@ -1011,7 +1047,7 @@ function drawEllipse(ctx, x, y, w, h) {
 					lastHandMessage[1] += "<p>Player Chips: " + playerChips + "<br></p>";
 					lastHandMessage[1] += "<p>Computer Chips: " + compChips + "<br></p>"; 	
 					lastHandMessage[0] = lastHandMessage[1] + lastHandMessage[0];
-					document.getElementById("bcall").innerHTML = "Start Next Hand";
+					document.getElementById("bcall").innerHTML = "Next Hand";
 					document.getElementById("bcall").style.visibility = "visible";
 					changeBets();							
 					enterHand(compChips - compStartHandChips); //write to db
@@ -2205,10 +2241,62 @@ if (!Array.prototype.indexOf)
 }
 	}		
 		</script>
+
+		<!-- navigation header bar starts here -->
+   <nav class="navbar navbar-default"  role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html" target="_blank">GTO Poker</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li ><a href="about.html" target = "_blank">About</a></li>
+        <li><a href="stat_page.html" target = "_blank">Stat Page</a></li>
+        <li><a href="fullAccess.html" target = "_blank">Full Access to Computer Cards</a></li>
+        <li><a href="http://www.TedPetrou.com" target = "_blank">Blog</a></li>
+
+
+
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+      	<li>
+      		<div class="fb-like" data-send="true" data-width="120" show-faces="false" data-layout ="button_count" ></div>
+      	</li>
+
+        <li>
+              <a href="https://twitter.com/share" id = "twitter_icon" class="twitter-share-button" data-url="http://www.GameTheoryOptimalPoker.com" data-text="Playing poker at" data-via="GTO_Poker" data-size="large">Tweet</a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/pub/ted-petrou/65/577/706" class="logo" id="in-logo" target = "_blank">
+            <img id = "linkedin_icon" src="linkedin_logo.ico"/>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/tdpetrou/GameTheoryOptimalPoker" class="logo" id="in-logo" target = "_blank">
+            <img id = "github_icon" style = "height:32px" src="github_icon.png"/>
+          </a>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<!-- end of navigation bar -->
+
 	
 		<!--<canvas id="thecanvas" height = "1000" width = "1400"></canvas>-->
 		<p id="header">Limit Hold'em Heads-Up Poker</p>
-		<p style = "text-align:center"><a href = "fullAccess.html" target = "_blank">New! Click here to have full access to computer's hand while you play.</a>
+		<div class = "veryTinyDiv"> </div>
+		
 		<!--<p id = "perc" style ="text-align:center";>Percentile is "</p>-->
 		
 		<div class = "bigDiv">
@@ -2245,12 +2333,12 @@ if (!Array.prototype.indexOf)
 		<div class = "rightBet" >
 		<!--<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>-->
 		
-		<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="true" data-auto-logout-link="true">			
-		</div>
+	<!-- 	<div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="true" data-auto-logout-link="true">			
+		</div> -->
 		
 	
 		
-			<button type="button" onclick="startPlay()" id = "b2" >Begin Playing</button>
+			<button type="button" onclick="startPlay()" class="btn btn-primary" id = "b2" >Begin Playing</button>
 			
 			
 		</div>
@@ -2272,12 +2360,12 @@ if (!Array.prototype.indexOf)
 		</div>
 		</div>
 		<div class = "rightBet" ><p id = "totalPot">Total Pot: 0</p>
-			<p id = "handHistory"><button onclick = "handHistory()">Click to view last hand history</button></p>			
+			<p id = "handHistory"><button class="btn-link" onclick = "handHistory()">Click to view last hand history</button></p>			
 		</div>
 			<div class = "farRight">
-				<div class = "speedButton"><button onclick = "incSpeed()" id ="incButton">Increase Speed</button></div>
+<!-- 				<div class = "speedButton"><button class="btn btn-primary" onclick = "incSpeed()" id ="incButton">Increase Speed</button></div>
 				<p id = "speedP">Speed: 5</p>
-				<div class = "speedButton"><button onclick = "decSpeed()" id ="decButton">Decrease Speed</button></div>
+				<div class = "speedButton"><button class="btn btn-primary" onclick = "decSpeed()" id ="decButton">Decrease Speed</button></div> -->
 			</div>
 		</div>
 		
@@ -2289,7 +2377,6 @@ if (!Array.prototype.indexOf)
 		<div class = "bigDiv">
 		<div class = "rightBet">	
 			<p id = "playerBet">Player Bet: 0</p>
-			<p id = "seeStats"><a href = "Stat_Page.html" target = "_blank">Click to see your stats</a>
 		</div>
 		<div class = "compCard">
 		<div class = "crop">
@@ -2311,9 +2398,30 @@ if (!Array.prototype.indexOf)
 		
 		
 		<div class = "medDiv">
-			<div class = "bbutton"><button type="button" onclick="fold()" id = "bfold" >Fold</button></div>
-			<div class = "bbutton"><button type="button" onclick="call()" id = "bcall" >Call</button></div>
-			<div class = "bbutton"><button type="button" onclick="raise()" id = "braise" >Raise</button></div>
+				<div class = "fblike"> 
+					<div class="fb-login-button" data-max-rows="1" data-size="small" data-show-faces="true" data-auto-logout-	link="true">			
+					</div>
+				</div>
+			
+			<div class = "allButtons">
+				<div class = "bbutton"><button class="btn btn-primary" type="button" onclick="fold()" id = "bfold" >Fold</button></div>
+				<div class = "bbutton"><button class="btn btn-primary" type="button" onclick="call()" id = "bcall" >Call</button></div>
+				<div class = "bbutton"><button class="btn btn-primary" type="button" onclick="raise()" id = "braise" >Raise</button>
+				</div>
+			</div>
+
+		<div class = "fbLikeRight"> 
+			    <div>
+			    <a onclick = "incSpeed()" id ="incButton"><img id = "upButton" src = "up_button.png"/></a>
+
+			    </div>
+				<p id = "speedP">Speed: 5</p>
+				<div>
+			      <a onclick = "decSpeed()" id ="decButton"><img id = "downButton" src = "up_button.png"/>
+                </div>
+			</div>
+
+
 		</div>
 		<!--<div class = "tinyDiv" style = "margin-top:0em; width:100%;">
 			<button type="button" onclick="startPlay()" id = "b1" >Start next hand</button>
@@ -2321,14 +2429,14 @@ if (!Array.prototype.indexOf)
 		<!--<div class = "tinyDiv" id ="sqlString">
 			
 		</div>	-->	
-		<div class = "tinyDiv" id ="phpReturn"> reponse
+<!-- 		<div class = "tinyDiv" id ="phpReturn"> reponse
 			
+		</div>  -->
+	<!-- 	<div class = "fblike"> 
+			<div class="fb-login-button" data-max-rows="1" data-size="small" data-show-faces="true" data-auto-logout-link="true">			
+		</div> -->
 		</div> 
-		<div class = "fblike"> 
-			<div class="fb-like" data-send="true" data-width="450" show-faces="false"></div>
-			<!--<div>Disclaimer: This app tracks stats with your facebook name and ID. Log out to prevent this from happening.</div>-->
-			<!--<button type = "button" onclick ="manualFBLogin()" id = "manualLog">Log in manually</button>-->
-		</div> 
+
 		<img id = "cardFly" alt = "cardfly" src = "card_back.png"/>
 		
 	</body>
