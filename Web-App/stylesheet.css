@@ -1,3 +1,21 @@
+
+		
+body { 
+	background: url(images/background.png) no-repeat; /* center center; /* fixed; */
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	/*background-repeat: no-repeat;*/
+	
+	background-position: center;
+	/*background-position: 0 155px;*/
+	background-size: 1280px 915px;
+	background-color: black;
+	background-position-y: 0px 
+}
+
+
 .crop{
 	/*float:left; 
 	/*margin:.5em 10px .5em 0;*/
@@ -47,7 +65,6 @@
 
 
 .board {	
-	/*background-color: #BCD2EE; */
 	height: 7em;
 	width: 420px;
 	margin-left:auto;
@@ -56,8 +73,6 @@
 	display:inline;
 }
 .compCard {
-	
-	/*background-color: #BCD2EE;*/
 	height: 7em;
 	width: 250px;
 	margin-left:auto;
@@ -84,6 +99,25 @@
 	vertical-align:top;
 	position:relative;
 }
+
+.leftBetPlayer {
+	height:7em; 
+	/*width: 25%;*/
+	width:250px;
+	display:inline-block;
+	vertical-align:top;
+	position:relative;
+}
+
+.rightBetPlayer {
+	height:7em; 
+	/*width: 10%;*/
+	width:250px;
+	display:inline-block;
+	vertical-align:top;
+	position:relative;
+}
+
 .farRight {
 	height:7em;
 	width:150px;
@@ -94,36 +128,6 @@
 .bbutton {
 	display:inline-block;
 }
-
-.fblike {
-	text-align:center;
-	overflow: hidden;
-	display: inline-block;
-	position: relative;
-	width:275px;
-	vertical-align: top;
-}
-
-.fbLikeRight {
-	
-	text-align:left;
-	display: inline-block;
-	width:270px;
-	height: 100px;
-	position:relative;
-	bottom: 50px;
-
-}
-.fb-login-button {
-	margin-left: 0px;
-}
-
-.allButtons {
-	display: inline-block;
-	vertical-align: top;
-	text-align: center;
-}
-
 
 #b1 {
 	
@@ -177,17 +181,8 @@ visibility:hidden;
 }
 
 #compMessage {
-	/*margin:-3em;*/
-	text-align: center;
-	font-family: Garamond, serif;
-	font-size: 1.5em;
-}
-
-#compMessageDiv {
-	/*height:50px; */
 	display:inline-block;
 	border:1px green;
-
 }
 
 #compBet {
@@ -237,23 +232,16 @@ visibility:hidden;
 	visibility:hidden;
 }
 
-.speedButton {
-	text-align:center;
-	width:55%;	
-}
-
-.speedButtonDown {
-	text-align:center;
-	width:55%;	
-}
 
 #upButton {
-	max-width:10%;
+	/*max-width:10%;*/
+	width:30px;
 	cursor: pointer;
 }
 
 #downButton {
-	max-width:10%;
+	/*max-width:10%;*/
+	width:30px;
 	transform: rotate(180deg);
 	cursor: pointer;
 }
@@ -261,7 +249,7 @@ visibility:hidden;
 
 #speedP {
 	font-size:1.5em;
-	width: 50%;
+	/*width: 50%;*/
 	margin-top: 5px;
 }
 
@@ -272,8 +260,8 @@ a {
 	text-align:left;
 	
 }
-
-/* {
+/*
+* {
 	border:1px red dotted;
 }  */
 
@@ -294,10 +282,6 @@ span {
 	visibility:hidden;
 }
 
-body {
-	color: #000;
-	}
-	
 
 #linkedin_icon {
 	height: 32px;
@@ -310,6 +294,48 @@ body {
 
 #linkedin_icon {
 	margin-left: -30px;
+}
+
+#google_plus_icon{
+	width: 30px;
+	height:30px;
+	float:right;
+}
+
+.fbLogin {
+	/*overflow: hidden;*/
+	display: inline-block;
+	/*width:25%;*/
+	width: 250px;
+	vertical-align: top;
+	text-align: right;
+	word-wrap:break-word;
+	/*border: 2px dotted red;*/
+}
+
+.fb-login-button {
+	margin-right: 0px;
+	/*width: 50%;*/
+	word-wrap:break-word;
+}
+
+.allPlayerButtons {
+	display: inline-block;
+	vertical-align: top;
+	margin: auto;
+	width:310px;
+}
+
+.speedDiv {
+	
+	text-align:center;
+	display: inline-block;
+	width:270px;
+	/*width:25%;*/
+	margin: auto;
+	height: 100px;
+	position:relative;
+	bottom: 50px;
 }
 
 .fb-like {
@@ -332,6 +358,11 @@ body {
 	z-index: 1000;
 	width:100%;
 }
+
 .btn-link {
 	color:red;
+}
+
+#totalHandsPlayed {
+	margin-left: 400px;
 }
