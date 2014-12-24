@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.ActionBar.LayoutParams;
@@ -29,8 +28,9 @@ public class MainActivity extends Activity {
 	ImageView iv; 
 	ImageView iv2;
 	Board board;
-	Player player;
-	Comp comp;
+	//Player player;
+	Competitor player;
+	Competitor comp;
 	Deck deck;
 	HandEvaluator handEvaluator = new HandEvaluator();
 	@Override
@@ -41,12 +41,13 @@ public class MainActivity extends Activity {
 		deck = new Deck();
 		deck.print();
 		
-		board = new Board(1, Arrays.copyOfRange(deck.returnArray(), 2, 7));
+		board = new Board(0, Arrays.copyOfRange(deck.returnArray(), 2, 7)); //start roundNum at 0 not 1
 		
-		player = new Player(Arrays.copyOfRange(deck.returnArray(), 0, 2), 1000);
-		player.displayCards();
+		player = new Competitor(Arrays.copyOfRange(deck.returnArray(), 0, 2), 1000);
+		displayCard(R.id.player1, player.cards[0], true);
+		displayCard(R.id.player2, player.cards[1], true);	
 		
-		comp = new Comp(Arrays.copyOfRange(deck.returnArray(), 7, 9), 1000);
+		comp = new Competitor(Arrays.copyOfRange(deck.returnArray(), 7, 9), 1000);
 		//comp.displayCards();
 		
 		//board = new Board(1, Arrays.copyOfRange(deck.returnArray(), 2, 7));
@@ -99,48 +100,23 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	public class Player {
-		int[] cards = new int[2];
-		int chips;
-		int bet;
-		int startChips;
-		int totalBet; //total bet this hand
-		int hasGone;
-		double score;
-		String winMessage;
-		
-		public Player(int[] cards, int chips){
-			this.chips = chips;
-			this.cards[0] = cards[0];
-			this.cards[1] = cards[1];
-			this.bet=0;
-			this.startChips = 1000;
-			this.totalBet = 0;
-			this.hasGone = 0;
-			this.score = 0;
-			this.winMessage = "";
-		}
-		
-		
-		public void displayCards(){
-			displayCard(R.id.player1, cards[0], true);
-			displayCard(R.id.player2, cards[1], true);			
-		}
-	}
-	
-	public class Comp {
+	public class Competitor {
 		int[] cards = new int[2];
 		int chips;
 		int bet;
 		int startChips; //chips that comp started the hand with
 		int totalBet; //total bet this hand
 		int hasGone;
+		int[] numRaises;
+		int[] percentile;
 		int preflopScore;
 		double[] gameProbs = new double[2];
 		double score;
+		int bluff;
+		boolean drawingHand;
 		String winMessage;
 		
-		public Comp(int[] cards, int chips){
+		public Competitor(int[] cards, int chips){
 			this.chips = chips;
 			this.cards[0] = cards[0];
 			this.cards[1] = cards[1];
@@ -148,17 +124,47 @@ public class MainActivity extends Activity {
 			this.startChips = 1000;
 			this.totalBet = 0;
 			this.hasGone = 0;
+			this.numRaises = new int[4];
+			this.percentile = new int[4];
 			this.score = 0;
+			this.bluff = (int) Math.round(Math.random());
 			this.winMessage = "";
 			this.preflopScore = computePreflopScore(this.cards);
 			this.gameProbs = computePreflopProbs(this.preflopScore);
+			this.drawingHand = false;
 			Toast.makeText(getApplicationContext(), "Preflop score is " + this.preflopScore, Toast.LENGTH_SHORT).show();
 		}
 		
-		
-		public void displayCards(){
-			displayCard(R.id.comp1, this.cards[0], false);
-			displayCard(R.id.comp2, this.cards[1], false);			
+		public void getCurrentHandPercentile(){
+			// This calculates the percentile rank for the hand given the current board
+			// The percentile is the percentage of two card hands worse than starting hand
+			
+			int[] currentBoard = Arrays.copyOfRange(board.cards, 0, board.roundNum + 2);
+			int[] cardsEvaluated = concat(currentBoard, this.cards); //current hand as of the current board reading
+			HandEvaluator currentHand = new HandEvaluator(); 
+			currentHand.handValue(cardsEvaluated);
+			HandEvaluator tempHand = new HandEvaluator();
+			int[] tempCards;
+			int winners = 0;
+			int totalTrials = 0;
+			
+			//change to how many hands beat it
+			
+			for(int i = 0; i < 52; i++) {
+				if(Arrays.asList(cardsEvaluated).indexOf(i) != -1) {continue;}
+				for(int j = i + 1; j < 52; j++){ 
+					if(Arrays.asList(cardsEvaluated).indexOf(j) != -1) {continue;}
+					tempCards = concat(currentBoard, new int[] {i, j});
+					tempHand.handValue(tempCards);
+					if(currentHand.score > tempHand.score) { winners++; }
+					else if (currentHand.score == tempHand.score) { winners++; }
+					totalTrials++;
+				}
+			}
+			
+			//Log.w("percentile", "precentile is " + winners /totalTrials + " float" + winners /(float) totalTrials);
+			this.percentile[board.roundNum] = (int) (Math.round(winners / (float) totalTrials  * 100));
+			Toast.makeText(getApplicationContext(), "Percentile is " + comp.percentile[board.roundNum], Toast.LENGTH_SHORT).show();
 		}
 		
 	}
@@ -175,10 +181,11 @@ public class MainActivity extends Activity {
 		int dealer;
 		int pot;	
 		int handNum;
+		int[] lastRaise;
 		
 		
 		public Board(int roundNum, int[] cards){
-			this.roundNum = roundNum;
+			this.roundNum = roundNum;  // the round number will start at 0
 			this.cards = cards;
 			this.smallBet = 10;
 			this.bigBet = 20;
@@ -188,7 +195,7 @@ public class MainActivity extends Activity {
 			this.dealer = 0;
 			this.betSize = this.smallBet;
 			this.handNum = 1;
-			
+			this.lastRaise = new int[] {-1, -1, -1, -1};
 		}
 		
 		public void increaseRound(){
@@ -196,10 +203,10 @@ public class MainActivity extends Activity {
 		}
 		
 		public void deal(){
-			if(this.roundNum == 2){
+			if(this.roundNum == 1){
 				showFlop();
 			}
-			else if(this.roundNum == 3){
+			else if(this.roundNum == 2){
 				showTurn();
 			}
 			else {
@@ -210,8 +217,7 @@ public class MainActivity extends Activity {
 		private void showFlop(){
 			displayCard(R.id.board1, this.cards[0], true);			
 			displayCard(R.id.board2, this.cards[1], true);
-			displayCard(R.id.board3, this.cards[2], true);
-			
+			displayCard(R.id.board3, this.cards[2], true);		
 		}
 		
 		private void showTurn(){
@@ -224,7 +230,7 @@ public class MainActivity extends Activity {
 		
 		private void newHand(){
 			this.dealer = 1 - this.dealer;
-			this.roundNum = 1;
+			this.roundNum = 0;
 			this.betRound = 1;
 			this.handNum += 1;
 			this.pot = 0;
@@ -235,9 +241,7 @@ public class MainActivity extends Activity {
 			ImageView b3 = (ImageView) findViewById(R.id.board3);
 			ImageView b4 = (ImageView) findViewById(R.id.board4);
 			ImageView b5 = (ImageView) findViewById(R.id.board5);
-			
-			
-			
+						
 			b1.setVisibility(View.INVISIBLE);
 			b2.setVisibility(View.INVISIBLE);
 			b3.setVisibility(View.INVISIBLE);
@@ -259,10 +263,10 @@ public class MainActivity extends Activity {
 		Bitmap resizedbitmap1=Bitmap.createBitmap(bmp,(int) Math.floor(cardNum % 13) * w,(int) Math.floor(cardNum/13) * h,w, h);
 		iv.setImageBitmap(resizedbitmap1);
 		
-		ViewGroup.LayoutParams iv_params_b1 = iv.getLayoutParams();
-		iv_params_b1.height = (int) (resizedbitmap1.getHeight() * .6);
-		iv_params_b1.width = (int) (resizedbitmap1.getWidth() * .6);
-		iv.setLayoutParams(iv_params_b1);
+//		ViewGroup.LayoutParams iv_params_b1 = iv.getLayoutParams();
+//		iv_params_b1.height = (int) (resizedbitmap1.getHeight() * .6);
+//		iv_params_b1.width = (int) (resizedbitmap1.getWidth() * .6);
+//		iv.setLayoutParams(iv_params_b1);
 		
 		if(animate){
 			Animation anim;
@@ -273,13 +277,13 @@ public class MainActivity extends Activity {
 			iv.setVisibility(View.VISIBLE);
 		}
 	}
+	
 	public void hideCompCard(){
 		
 		ImageView c1 = (ImageView) findViewById(R.id.comp1);
 		ImageView c2 = (ImageView) findViewById(R.id.comp2);
-	
-		c1.setBackgroundResource(R.drawable.card_back);
-		c2.setBackgroundResource(R.drawable.card_back);
+        c1.setImageResource(R.drawable.card_back);
+        c2.setImageResource(R.drawable.card_back);
 	}
 	
 	public void startHand(){
@@ -292,11 +296,18 @@ public class MainActivity extends Activity {
 		comp.hasGone = 0;
 		player.bet = 0;
 		comp.bet = 0;
+		player.numRaises = new int[4];
+		comp.numRaises = new int[4];
 		board.turn = board.dealer;
+		board.lastRaise = new int[] {-1, -1, -1, -1};
 		comp.preflopScore = computePreflopScore(comp.cards);
 		comp.gameProbs = computePreflopProbs(comp.preflopScore);
+		comp.bluff = (int) Math.round(Math.random());
+		comp.drawingHand = false;
 		hideCompCard();
-		player.displayCards();
+		//
+		displayCard(R.id.player1, player.cards[0], false);
+		displayCard(R.id.player2, player.cards[1], false);
 		clearMessages();
 		updatePot(); //update this before new blinds are bet
 		updateBlinds();
@@ -351,7 +362,9 @@ public class MainActivity extends Activity {
 	public void raise(View v){
 		TextView pm = (TextView) findViewById(R.id.playerMessage);
 		updatePlayerChips(-1 * (comp.bet + board.betSize - player.bet));
-		player.bet = comp.bet + board.betSize;	
+		player.bet = comp.bet + board.betSize;
+		player.numRaises[board.roundNum] += 1;
+		board.lastRaise[board.roundNum] = 0;
 		updatePlayerBet();
 		if(comp.bet == 0){ pm.setText("Player Bets " + player.bet); } 
 		else { pm.setText("Player Raises to " + player.bet); } 
@@ -397,6 +410,8 @@ public class MainActivity extends Activity {
 		TextView cm = (TextView) findViewById(R.id.compMessage);
 		updateCompChips(-1 * (player.bet + board.betSize - comp.bet));
 		comp.bet = player.bet + board.betSize;
+		comp.numRaises[board.roundNum] += 1;
+		board.lastRaise[board.roundNum] = 1;
 		updateCompBet();
 		if(player.bet == 0){ cm.setText("Comp Bets " + comp.bet); } 
 		else { cm.setText("Comp Raises to " + comp.bet); } 
@@ -484,6 +499,7 @@ public class MainActivity extends Activity {
 	public void compTurn(){
 		toggleButtons(1);
 		double randNum = Math.random();
+		probAdjustment();
 		if(comp.bet == player.bet) {
 			if(randNum < comp.gameProbs[0]){ compCheckFold(); }
 			else  { compRaise(); }
@@ -514,24 +530,126 @@ public class MainActivity extends Activity {
 		}		
 	}
 	
-	public void determineTurn(){
-		if(comp.hasGone == 1 && player.hasGone == 1){
+	public boolean hasOvers() {
+		
+		int[] currentBoardCards = HandEvaluator.changeAce(HandEvaluator.getRank(Arrays.copyOfRange(board.cards,0, board.roundNum + 2)));
+		int[] compCards = HandEvaluator.changeAce(HandEvaluator.getRank(comp.cards));
+		Arrays.sort(currentBoardCards);
+		Arrays.sort(compCards);
+		int maxBoard = currentBoardCards[currentBoardCards.length - 1];
+		
+		if(compCards[0] > maxBoard && compCards[1] > maxBoard && compCards[0] >= 9) {
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+
+	public void getFutureValue() {
+		int[] boardCards = Arrays.copyOfRange(board.cards, 0,  board.betRound + 2);
+		int[] compCards = comp.cards;
+		int[] allCards = concat(boardCards, compCards);
+		boolean isFlush = false;
+		boolean isStraight = false;
+		int[] suits= HandEvaluator.getSuit(allCards);
+		int[] cardRanks = HandEvaluator.getRank(compCards);
+		int scard = 0;
+		int numStraights = 0;
+		boolean check1;
+		//boolean check2;
+		int tempSuitCount;
+		int[] possStraightCards;
+		//don't look for straight draws on 4 flush boards
 			
+		//check if there are 4 or more of same suit
+		for(int i = 0; i < 4; i++){
+			tempSuitCount = 0;
+			for(int j = 0; j < suits.length; j++){
+				if(suits[j] == i){
+					tempSuitCount++;
+				}
+			}
+			if (tempSuitCount == 4){
+				isFlush = true;
+			}
+		}
+			
+		//only check here if not flush or not 3 flush on board
+		int[] boardSuits = HandEvaluator.getSuit(boardCards);
+		if (! ((boardSuits[0] == boardSuits[1]) && (boardSuits[1] == boardSuits[2]))){
+			for(int i = 0; i < 52; i++) {
+				check1 = false;
+				//check2 = false; 
+				if(Arrays.asList(allCards).indexOf(i) == -1){  //check if card is part of the board.
+					possStraightCards = concat(allCards, new int[] {i});
+				} 
+				else { 
+					continue; 
+				}
+				
+				possStraightCards = HandEvaluator.getUniqueCards(HandEvaluator.getRank(possStraightCards));
+				if (possStraightCards.length < 4) {continue;}
+				Arrays.sort(possStraightCards);
+				scard = HandEvaluator.rowStraight(possStraightCards);
+					
+				if(scard == 0) { //not a straight
+					possStraightCards = HandEvaluator.changeAce(possStraightCards);
+					Arrays.sort(possStraightCards);
+					scard = HandEvaluator.rowStraight(possStraightCards);
+					if(scard == 0){
+						continue;
+					}
+					else { //straight
+						scard += 4; 
+					}
+				} 
+				else { //straight
+					scard += 4; 
+				}
+					
+					//if(Math.abs(scard - HandEvaluator.changeAceValue(cardRanks[0]))  <= 4 && Math.abs(scard - HandEvaluator.changeAceValue(cardRanks[1]))  <= 4) 
+				//	{  check1 = true; }
+					
+					if( Math.abs(scard - HandEvaluator.changeAceValue(cardRanks[0]))  <= 1 || 
+							Math.abs(scard - HandEvaluator.changeAceValue(cardRanks[1]))  <= 1 ||
+							(Math.abs(scard - HandEvaluator.changeAceValue(cardRanks[0]))  <= 4 && Math.abs(scard - HandEvaluator.changeAceValue(cardRanks[1]))  <= 4))
+					{ check1 = true; }
+					
+					if(check1) { numStraights++;} // alert("scard is " + scard  + "  " + check1 + "   " + check2); }
+				}
+		}
+			
+			if(numStraights >= 8) { isStraight = true; }
+		//	if(isStraight) { alert("straight draw"); }	
+			if(isFlush || isStraight) { comp.drawingHand = true; }
+	}
+	
+	public void determineTurn(){
+		
+		// Determines who's turn it is and move's on to next round if both players have acted 
+		
+		if(comp.hasGone == 1 && player.hasGone == 1){
+			//move on to next round
 			board.roundNum += 1;
-			if(board.roundNum == 3) { board.betSize = board.betSize * 2; }
+			if(board.roundNum == 2) { board.betSize = board.betSize * 2; }
 			//Toast.makeText(getApplicationContext(), "round number now " + board.roundNum, Toast.LENGTH_SHORT).show();
 			
 			//reset the round
 			updatePot();
-			if(board.roundNum > 4) { evaluateHand(); return; }	//end of hand
+			if(board.roundNum > 3) { evaluateHand(); return; }	//end of hand
 			comp.bet = 0;
 			player.bet = 0;
 			board.betRound = 0;
 			board.turn = 1 - board.dealer;
 			comp.hasGone = 0;
 			player.hasGone = 0;
+			comp.getCurrentHandPercentile();
+			player.getCurrentHandPercentile();
+			initializeCompProbs();
 			updateCompBet();
-			updatePlayerBet();			
+			updatePlayerBet();	
+			//if(board.roundNum < 3)  getFutureValue(); 
 			board.deal();
 		}
 		else { //round still continues
@@ -542,15 +660,13 @@ public class MainActivity extends Activity {
 	}
 	
 	public void evaluateHand(){
-		
-		View vw = (View) findViewById(R.id.nextHand);
+
 		TextView pm = (TextView) findViewById(R.id.playerMessage);
-		
 		toggleButtons(1);
 
-		comp.displayCards();
-		
-		//c1.setVisibility(View.v);
+		displayCard(R.id.comp1, comp.cards[0], false);
+		displayCard(R.id.comp2, comp.cards[1], false);
+
 		handEvaluator.handValue(concat(player.cards, board.cards));
 		player.score = handEvaluator.score;
 		player.winMessage = handEvaluator.winMessage;
@@ -558,9 +674,8 @@ public class MainActivity extends Activity {
 		handEvaluator.handValue(concat(comp.cards, board.cards));
 		comp.score = handEvaluator.score;
 		comp.winMessage = handEvaluator.winMessage;
-		
-		vw.setVisibility(View.VISIBLE);
-		
+
+		showNextHand();
 		if(player.score > comp.score){
 			pm.setText("Player wins with " + player.winMessage);
 			updatePlayerChips(board.pot);
@@ -586,7 +701,8 @@ public class MainActivity extends Activity {
 		hn.setText("Hand: " + board.handNum);
 	}
 	
-	public int[] concat(int[] A, int[] B) {
+	//concatenate two arrays
+	public int[] concat(int[] A, int[] B) { 
 		   int aLen = A.length;
 		   int bLen = B.length;
 		   int[] C= new int[aLen+bLen];
@@ -596,8 +712,8 @@ public class MainActivity extends Activity {
 	}
 	
 	public int computePreflopScore(int[] cards){
-		int[] rcards = handEvaluator.changeAce(handEvaluator.getRank(cards));
-		int[] scards = handEvaluator.getSuit(rcards);
+		int[] rcards = HandEvaluator.changeAce(HandEvaluator.getRank(cards));
+		int[] scards = HandEvaluator.getSuit(rcards);
 		
 		int tempScore = 0;
 		int[] valueCards = {20,21,23,25,28,32,36,41,47,55,65,80,100};
@@ -639,4 +755,396 @@ public class MainActivity extends Activity {
 			return (new double[] {0, 0});
 	}
 	
+	
+
+	
+	
+	public void initializeCompProbs(){
+		//this function will initialize a starting probability action for the comp that will be modified later
+		
+		
+		//if(board.dealer == 1) { numPlayerRaises[0] = Math.max(numPlayerRaises[0] - 1, 0); }	
+		// might need to bring back line above
+		
+		int percentile = comp.percentile[board.roundNum];
+		int numPlayerRaisesPrevRound = player.numRaises[board.roundNum - 1];
+		
+	
+		
+		if(percentile <= 30) { comp.gameProbs = new double[] {1, 1}; } // fold all bad hands
+		
+			else if(percentile < 40) { 
+				if (board.dealer == 1) {
+					comp.gameProbs = new double[] {1, 1};
+					if (numPlayerRaisesPrevRound > 0 ) {comp.gameProbs[1] = 1;};
+				}
+				else {
+					comp.gameProbs = new double[] {1, 1};
+					if (numPlayerRaisesPrevRound > 0 ) {comp.gameProbs[1] = 1;};
+				}
+			}
+			
+			else if(percentile < 45) { //if first to enter pot bet but don't raise
+				comp.gameProbs = new double[] {0, .7}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {1, 1};} break; // was comp.gameProbs = new double[] {.7, 1};
+						case 1: comp.gameProbs = new double[] {1, 1}; break;
+						case 2: comp.gameProbs = new double[] {1, 1}; /*alert("folding 40 - 50 percentile");*/ break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {1, 1};}  break; // was comp.gameProbs = new double[] {0, 1};
+						case 1: comp.gameProbs = new double[] {1, 1}; break;
+						case 2: comp.gameProbs = new double[] {1, 1}; /* alert("folding 40 - 50 percentile"); */ break;	
+					}
+				}
+			}
+			
+			
+			else if(percentile < 50) { //if first to enter pot bet but don't raise
+				comp.gameProbs = new double[] {0, .7}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {1, 1};} break; // was comp.gameProbs = [.2, 1];
+						case 1: comp.gameProbs = new double[] {1, 1}; break;
+						case 2: comp.gameProbs = new double[] {1, 1}; /*alert("folding 40 - 50 percentile");*/ break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {.8, 1};}  break; // was comp.gameProbs = new double[] {0, 1};
+						case 1: comp.gameProbs = new double[] {1, 1}; break;
+						case 2: comp.gameProbs = new double[] {1, 1}; /* alert("folding 40 - 50 percentile"); */ break;	
+					}
+				}
+			}
+			
+			else if(percentile < 55) { 
+				comp.gameProbs = new double[] {0, .7}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {.5, 1};}  break; // was comp.gameProbs = new double[] {0, .5};
+						case 1: comp.gameProbs = new double[] {.5, 1}; break; // was new double[] {0, 1}
+						case 2: comp.gameProbs = new double[] {1, 1}; break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {.8, 1};}  break; // was comp.gameProbs = new double[] {0, .5};
+						case 1: comp.gameProbs = new double[] {.5, 1}; break; // was new double[] {0, 1}
+						case 2: comp.gameProbs = new double[] {1, 1}; break;	
+					}
+				}
+			}
+				
+			else if(percentile < 60) { 
+				comp.gameProbs = new double[] {0, .7}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {.4, 1};}  break; // was comp.gameProbs = new double[] {0, .5};
+						case 1: comp.gameProbs = new double[] {.5, 1}; break; // was new double[] {0, 1}
+						case 2: comp.gameProbs = new double[] {1, 1}; break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: if(board.betRound == 0) {comp.gameProbs = new double[] {0, .5};} else { comp.gameProbs = new double[] {.7, 1};}  break; // was comp.gameProbs = new double[] {0, .5};
+						case 1: comp.gameProbs = new double[] {.5, 1}; break; // was new double[] {0, 1}
+						case 2: comp.gameProbs = new double[] {1, 1}; break;	
+					}
+				}
+			}
+			
+			else if(percentile < 70) { 
+				comp.gameProbs = new double[] {0, .6}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, .2}; break;
+						case 1: comp.gameProbs = new double[] {0, 1}; break;
+						case 2: comp.gameProbs = new double[] {0, 1}; break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, .2}; break;
+						case 1: comp.gameProbs = new double[] {0, 1}; break;
+						case 2: comp.gameProbs = new double[] {0, 1};	break;
+				
+					}
+				}
+			}
+			
+			else if(percentile < 77) { 
+				comp.gameProbs = new double[] {0, .6}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, .2}; break;
+						case 1: comp.gameProbs = new double[] {0, 1}; break;
+						case 2: comp.gameProbs = new double[] {0, 1}; break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, .2}; break;
+						case 1: comp.gameProbs = new double[] {0, 1}; break;
+						case 2: comp.gameProbs = new double[] {0, 1};	break;
+					}
+				}
+			}
+				
+			else if(percentile < 82) { 
+				comp.gameProbs = new double[] {0, .5}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, .15}; break;
+						case 1: comp.gameProbs = new double[] {0, .7}; break;
+						case 2: comp.gameProbs = new double[] {0, 1};	break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, .15}; break;
+						case 1: comp.gameProbs = new double[] {0, .7}; break;
+						case 2: comp.gameProbs = new double[] {0, 1};	break;	
+					}
+				}
+			}
+			
+			
+			else if(percentile < 87) { 
+				comp.gameProbs = new double[] {0, .3}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, 0}; break;
+						case 1: comp.gameProbs = new double[] {0, .5}; break;
+						case 2: comp.gameProbs = new double[] {0, .8}; break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+                        case 0: comp.gameProbs = new double[] {0, 0}; break;
+                        case 1: comp.gameProbs = new double[] {0, .5}; break;
+                        case 2: comp.gameProbs = new double[] {0, .8}; break;
+					}
+				}
+			}
+			
+			else if(percentile < 94) { 
+				comp.gameProbs = new double[] {0, .3}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, 0}; break;
+						case 1: comp.gameProbs = new double[] {0, .4}; break;
+						case 2: comp.gameProbs = new double[] {0, .6}; break;						
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, 0}; break;
+						case 1: comp.gameProbs = new double[] {0, .4}; break;
+						case 2: comp.gameProbs = new double[] {0, .6}; break;						
+					}						
+				}
+				
+			}
+			
+			else { 
+				comp.gameProbs = new double[] {0, .2}; 
+				if(board.dealer == 1) {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, 0}; break;
+						case 1: comp.gameProbs = new double[] {0, .2}; break;
+						case 2: comp.gameProbs = new double[] {0, .3}; break;							
+					}
+				}
+				else {
+					switch(numPlayerRaisesPrevRound){
+						case 0: comp.gameProbs = new double[] {0, 0}; break;
+						case 1: comp.gameProbs = new double[] {0, .2}; break;
+						case 2: comp.gameProbs = new double[] {0, .3}; break;	
+					}
+				}
+			}
+			
+	}
+	
+
+	public void probAdjustment() {
+		//update probabilities
+		
+		boolean overs = hasOvers();
+		
+		//if (board.roundNum > 1) {generalCompProbs();}
+		//if (board.roundNum >= 2 && board.roundNum <= 3) { getFutCompHandValue(); } ;
+		if (board.pot >= 100 && comp.percentile[board.roundNum] > 46) { comp.gameProbs[0] = 0; }
+		if (board.pot >= 140 && comp.percentile[board.roundNum] > 38) { comp.gameProbs[0] = 0; }						//never fold large board.pots
+		if (board.pot >= 160 && comp.percentile[board.roundNum] > 30) { comp.gameProbs[0] = 0; }
+		if (board.pot >= 200) { comp.gameProbs[0] = 0; }	
+		
+		if (board.roundNum == 1) {
+			if (board.betRound > 2) {comp.gameProbs[0] = 0; }		//call to see flop if already raised pre
+			if (board.betRound >= 2 && comp.preflopScore < 120) { comp.gameProbs[1] = 1; }		//should i clamp down pf
+			if (comp.bet >= 10 && board.dealer == 1) {comp.gameProbs[0] = 0; } //call if limped in				
+		}
+		
+		if (board.roundNum == 2){
+		
+			if (comp.percentile[board.roundNum] >= 60) { comp.bluff = 0; }
+			
+			if (board.betRound == 0) {
+			
+				if (comp.numRaises[0] == 2) { comp.gameProbs = new double [] {0, 0}; }	//always bet flop after 4 betting pf
+				if (board.lastRaise[0] == 1) {  comp.gameProbs = new double [] {0, 0}; } //always bet flop after 3 betting
+				
+				if (board.dealer == 1) {
+					if (board.lastRaise[0] == 0) {comp.gameProbs = new double[] {0, Math.min(.5, comp.gameProbs[1])};} //increase chance of raising flop when on board.dealer	when player has lead pf and checks flop						
+					if (comp.bluff == 1 && Math.random() > .8) { comp.gameProbs = new double [] {0, 0}; } //	
+				}
+				
+				if (board.dealer == 0) {
+					if (comp.percentile[board.roundNum] < 85 && Math.random() < .9 && board.lastRaise[0] == 0) { comp.gameProbs = new double[] {1, 1};} //check when first to act when player has lead
+					if (comp.percentile[board.roundNum] >= 85 && Math.random() < .7 && board.lastRaise[0] == 0) { comp.gameProbs = new double[] {1, 1};} //keep checking to induce bets				
+					if (comp.bluff == 1 && Math.random() > .8) { comp.gameProbs = new double [] {0, 0}; } //donk comp.bluff == 1	
+				}												
+			}
+			
+			if (board.betRound == 1){
+				if (board.dealer == 1) {							
+					if (comp.percentile[board.roundNum] > 50 && Math.random() > .3) { comp.gameProbs = new double [] {0, 0}; }	//raise more with decent hands
+					if (comp.bluff == 1) { comp.gameProbs = new double [] {0, 0}; }
+					if (comp.bluff == 1 && Math.random() < .2) { comp.gameProbs = new double[] {0, 1}; } //call to comp.bluff == 1 the turn
+				}
+				if (board.dealer == 0) {
+					if (comp.percentile[board.roundNum] > 70 && Math.random() > .4) { comp.gameProbs = new double [] {0, 0}; } //raising more with decent hands
+					if (comp.bluff == 1 && Math.random() > .5) { comp.gameProbs = new double [] {0, 0}; } //comp.bluff == 1 less often oop			
+				}				
+				if (overs && comp.percentile[board.roundNum] > 35 && Math.random() > .4) { comp.gameProbs[0] = 0; } //sometimes call with overs
+			}
+			
+			if (board.betRound == 2){
+				if (board.dealer == 1) {						
+					if (comp.percentile[board.roundNum] < 80) { comp.gameProbs[1] = 1; }	//slow down, do not 3 bet
+					if (comp.bluff == 1 && Math.random() > .4) { comp.gameProbs = new double [] {0, 0}; }								
+				}
+				if (board.dealer == 0) {
+					if (comp.percentile[board.roundNum] < 85) { comp.gameProbs[1] = 1; }	//slow down, do not 3 bet							
+					if (comp.bluff == 1 && Math.random() > .5) { comp.gameProbs = new double [] {0, 0}; }												
+				}			
+				if (overs && comp.percentile[board.roundNum] > 35 && Math.random() > .3) { comp.gameProbs[0] = 0; } //sometimes call with overs
+			
+			}
+			
+			
+			if (board.betRound == 3){
+				if (board.dealer == 1) {						
+					if (comp.percentile[board.roundNum] < 80) { comp.gameProbs[1] = 1; }	//slow down, do not 3 bet
+					if (comp.bluff == 1 && Math.random() > .4) { comp.gameProbs = new double [] {0, 0}; } //4-bet comp.bluff == 1							
+				}
+				if (board.dealer == 0) {
+					if (comp.percentile[board.roundNum] < 85) { comp.gameProbs[1] = 1; }	//slow down, do not 3 bet							
+					if (comp.bluff == 1 && Math.random() > .5) { comp.gameProbs = new double [] {0, 0}; } //4-bet comp.bluff == 1											
+				}			
+				if (overs && comp.percentile[board.roundNum] > 35) { comp.gameProbs[0] = 0; } //call with overs					
+			}
+			
+			if (board.betRound == 4){						
+				if (comp.bluff == 1) { comp.gameProbs = new double[] {1, 1}; } //finally fold comp.bluff == 1	
+				if (comp.percentile[board.roundNum] < 60) { comp.gameProbs = new double[] {1, 1}; }
+				if (overs) { comp.gameProbs[0] = 0; } //call with overs						
+			}								
+		}
+		
+		
+		if (board.roundNum == 3){
+			if (comp.percentile[board.roundNum] >= 60) { comp.bluff = 0; }
+			//if (board.lastRaise[1] == 1 && player.numRaises[2] == 2) { comp.bluff == 1 = 0; } //turn comp.bluff == 1 off if called 4 betting
+			
+			if(board.betRound == 0) {
+				if (board.dealer == 1) { //comp has board.dealer
+					if (comp.numRaises[1] == 2 && comp.percentile[board.roundNum] > 96.5) { comp.gameProbs = new double [] {0, 0}; } //bet with monster
+					if (comp.numRaises[1] <= 1 && board.pot <= 100) { comp.gameProbs = new double[] {0, Math.min(.5, comp.gameProbs[1])};  } //increase chance of betting with air
+					//if (board.lastRaise[1] == 1 && player.numRaises[1] <= 1 && comp.percentile[board.roundNum] > 75 && Math.random() > .4) { comp.gameProbs = new double [] {0, 0}; }
+					if (board.lastRaise[1] == 1) { comp.gameProbs = new double [] {0, 0}; } //always bet after having lead on flop on board.dealer
+					if (comp.bluff == 0 && comp.percentile[board.roundNum] < 60 &&  Math.random() < .4) { comp.gameProbs = new double[] {0, 1}; } // check behind occasionally with mediocre hands
+					if (comp.bluff == 1 && board.lastRaise[1] == 1 && Math.random() < .8) { comp.gameProbs = new double [] {0, 0}; } // keep comp.bluff == 1ing almost always
+				}
+				if (board.dealer == 0) { //player has board.dealer
+					if (comp.percentile[board.roundNum] < 85 && Math.random() < .9 && board.lastRaise[1] == 0 && comp.numRaises[1] < 2) { comp.gameProbs = new double[] {1, 1};} //check when first to act when player has lead
+					if (comp.percentile[board.roundNum] >= 85 && Math.random() < .7 && board.lastRaise[1] == 0 && comp.numRaises[1] < 2) { comp.gameProbs = new double[] {1, 1};} //keep checking to induce bets						
+					if (board.lastRaise[1] == 0 && comp.percentile[board.roundNum] < 77) { comp.gameProbs = new double[] {1, 1}; } //check when player is in lead
+					if (comp.percentile[1] - comp.percentile[0] > 15 && board.lastRaise[1] == 0 && player.numRaises[1] > 0) { comp.gameProbs = new double[] {1, 1}; } //check-raise if backed into hand and player has lead
+					
+					if (board.lastRaise[1] == 1 && player.numRaises[1] <= 2 && comp.percentile[board.roundNum] > 50) { comp.gameProbs = new double [] {0, 0}; } //always bet with lead oop with decent hand
+					//if (board.lastRaise[1] == 1 && player.numRaises[1] == 2 && comp.percentile[board.roundNum] > 80) { comp.gameProbs = new double [] {0, 0}; } //always bet with lead oop with decent hand
+					
+					if (comp.bluff == 1 && board.lastRaise[1] == 1) { comp.gameProbs = new double [] {0, 0}; }
+				}					
+			}
+			
+			if(board.betRound == 1) {
+				if (comp.percentile[board.roundNum] < 82) { comp.gameProbs[1] = 1; }	//slow down, do not raise
+				if (comp.percentile[board.roundNum] < 86 && player.numRaises[1] == 1) { comp.gameProbs[1] = 1; } //never raise turn against strong player hand		
+				if (comp.percentile[board.roundNum] < 89 && player.numRaises[1] == 2) { comp.gameProbs[1] = 1; } //never raise turn against strong player hand									
+			}
+			
+			if(board.betRound == 2) {
+				if (comp.percentile[board.roundNum] < 92) { comp.gameProbs[1] = 1; }	//slow down, do not 3 bet
+				if(comp.percentile[board.roundNum] < 94 && player.numRaises[1] == 2) { comp.gameProbs[1] = 1; } //slow down, don't three bet									
+			}			
+			
+			if (board.betRound == 3) {
+				if (comp.percentile[board.roundNum] < 96.5) { comp.gameProbs[1] = 1; }	//slow down, do not 4 bet				
+				if(comp.percentile[board.roundNum] < 97.5 && player.numRaises[1] == 2) { comp.gameProbs[1] = 1; } //slow down, don't 4 bet
+			}
+			
+			if (board.betRound == 4){
+				comp.gameProbs = new double[] {0, 1};
+			}					
+		}				
+		
+		
+		if (comp.drawingHand && board.roundNum < 4) { comp.gameProbs[0] = 0; }
+		
+		
+		if (board.roundNum == 4) { 
+			if(comp.percentile[board.roundNum] > 94) { comp.gameProbs = new double[] {0, 0}; } //raise all the way
+			
+			if(board.betRound == 0) {
+				if(comp.bluff == 1 && board.lastRaise[2] == 1) { comp.gameProbs = new double [] {0, 0}; }
+				if(board.dealer == 0) {
+					if (comp.percentile[board.roundNum] < 85 && Math.random() < 1 && board.lastRaise[2] == 0 && comp.numRaises[2] < 2) { comp.gameProbs = new double[] {1, 1};} //check when first to act when player has lead
+					if (comp.percentile[board.roundNum] >= 85 && Math.random() < .7 && board.lastRaise[2] == 0 && comp.numRaises[2] < 2) { comp.gameProbs = new double[] {1, 1};} //keep checking to induce bets
+					if (comp.percentile[2] - comp.percentile[1] > 15 && board.lastRaise[2] == 0 && player.numRaises[2] > 0) { comp.gameProbs = new double[] {1, 1}; } //check-raise if backed into hand and player has lead							
+				}
+				if (board.dealer == 1) {						
+					if (comp.percentile[board.roundNum] > 50 && player.numRaises[2] == 0) { comp.gameProbs = new double[] {0, 0};} //make sure to bet if checked to on river
+					if (comp.percentile[board.roundNum] > 66 && player.numRaises[2] == 1) { comp.gameProbs = new double[] {0, 0};} //make sure to bet if checked to on river
+					if (comp.percentile[board.roundNum] > 80 &&  player.numRaises[2] == 2) { comp.gameProbs = new double[] {0, 0};} //make sure to bet if checked to on river					
+					if (board.lastRaise[2] == 1 && comp.percentile[board.roundNum] > 55) { comp.gameProbs = new double[] {0, 0}; }
+					if (board.pot <= 80 && board.lastRaise[2] == -1 && Math.random() < .4 && comp.percentile[board.roundNum] < 25) { comp.gameProbs = new double [] {0, 0}; }
+				}
+			}
+								
+			if (board.betRound == 1) {
+				if(comp.percentile[board.roundNum] < 85) { comp.gameProbs[1] = 1; } //never raise river with weakish hand
+				if(comp.percentile[board.roundNum] < 88 && player.numRaises[2] == 1) { comp.gameProbs[1] = 1; } //never raise river against strong player hand
+				if(comp.percentile[board.roundNum] < 90 && player.numRaises[2] == 2) { comp.gameProbs[1] = 1; } //never raise river against strong player hand
+				if (comp.percentile[board.roundNum] > 91 && player.numRaises[2] < 2) { comp.gameProbs = new double [] {0, 0}; } //make sure to raise
+			}
+			
+			if(board.betRound == 2){
+				if (comp.percentile[board.roundNum] < 92) { comp.gameProbs[1] = 1; }	//slow down, do not 3 bet
+				if(comp.percentile[board.roundNum] < 95 && player.numRaises[2] >= 1) { comp.gameProbs[1] = 1; } //slow down, don't three bet
+			}
+			
+			if (board.betRound == 3) {
+				if (comp.percentile[board.roundNum] < 96.5) { comp.gameProbs[1] = 1; }	//slow down, do not 4 bet				
+				if(comp.percentile[board.roundNum] < 98 && player.numRaises[2] >= 1) { comp.gameProbs[1] = 1; } //slow down, don't 4 bet
+			}
+		}
+	}
+	
 }
+/Users/Ted/AndroidstudioProjects/coolp/app/src/main/java/com/tdp/coolp/MainActivity.java

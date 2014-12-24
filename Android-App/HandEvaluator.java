@@ -127,7 +127,7 @@ public class HandEvaluator{
   }   
 
   
-  public int rowStraight(int[] cards){
+  public static int rowStraight(int[] cards){
       int straightCard = -1;
       
       for(int i = 0; i < cards.length - 4; i++){ //check if in a row      
@@ -254,7 +254,7 @@ public class HandEvaluator{
    }   
   
   //change entire hand ace to high
-  public int[] changeAce(int[] cards){
+  public static int[] changeAce(int[] cards){
       for(int i = 0; i < cards.length; i++){
           if (cards[i] == 0){
               cards[i] = 13;
@@ -264,7 +264,7 @@ public class HandEvaluator{
   }
   
   //change single card Ace to high
-  public int changeAceValue(int n){
+  public static int changeAceValue(int n){
       if(n == 0){
           return(13);
       }
@@ -290,7 +290,7 @@ public class HandEvaluator{
   }
   
   //get just the rank (0 - 12) of the cards 
-  public int[] getRank(int[] cards){
+  public static int[] getRank(int[] cards){
       int[] scards = new int[cards.length];
       for(int i = 0; i < cards.length; i++){ //get rank
           scards[i] = cards[i] % 13;      
@@ -299,7 +299,7 @@ public class HandEvaluator{
   }
   
   //get the suit (0 - 3)
-  public int[] getSuit(int[] cards){
+  public static int[] getSuit(int[] cards){
       int[] scards = new int[cards.length];
       for(int i = 0; i < cards.length; i++){ //get rank
           scards[i] = (int) Math.floor(cards[i] / 13);      
@@ -373,7 +373,7 @@ public class HandEvaluator{
   }    
   
   //return only unique ranks
-  public int[] getUniqueCards(int[] cards){        
+  public static int[] getUniqueCards(int[] cards){        
       int[] uCards = new int[7];
       uCards[0] = cards[0];
       int ct = 1; //unique counter
