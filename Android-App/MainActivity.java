@@ -18,11 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
+
+
 
 public class MainActivity extends Activity {
 	ImageView iv; 
@@ -33,13 +39,13 @@ public class MainActivity extends Activity {
 	Competitor comp;
 	Deck deck;
 	HandEvaluator handEvaluator = new HandEvaluator();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);				
 	
 		deck = new Deck();
-		deck.print();
 		
 		board = new Board(0, Arrays.copyOfRange(deck.returnArray(), 2, 7)); //start roundNum at 0 not 1
 		
@@ -60,7 +66,6 @@ public class MainActivity extends Activity {
 		updateCompBet();
 		changeButtons();
 		updateHandNum();
-		
 	}
 
 	@Override
@@ -132,7 +137,7 @@ public class MainActivity extends Activity {
 			this.preflopScore = computePreflopScore(this.cards);
 			this.gameProbs = computePreflopProbs(this.preflopScore);
 			this.drawingHand = false;
-			Toast.makeText(getApplicationContext(), "Preflop score is " + this.preflopScore, Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getApplicationContext(), "Preflop score is " + this.preflopScore, Toast.LENGTH_SHORT).show();
 		}
 		
 		public void getCurrentHandPercentile(){
@@ -162,9 +167,9 @@ public class MainActivity extends Activity {
 				}
 			}
 			
-			//Log.w("percentile", "precentile is " + winners /totalTrials + " float" + winners /(float) totalTrials);
+			//Log.w("percentile", "percentile is " + winners /totalTrials + " float" + winners /(float) totalTrials);
 			this.percentile[board.roundNum] = (int) (Math.round(winners / (float) totalTrials  * 100));
-			Toast.makeText(getApplicationContext(), "Percentile is " + comp.percentile[board.roundNum], Toast.LENGTH_SHORT).show();
+//			Toast.makeText(getApplicationContext(), "Percentile is " + comp.percentile[board.roundNum], Toast.LENGTH_SHORT).show();
 		}
 		
 	}
@@ -182,6 +187,7 @@ public class MainActivity extends Activity {
 		int pot;	
 		int handNum;
 		int[] lastRaise;
+        int[] roundBets;
 		
 		
 		public Board(int roundNum, int[] cards){
@@ -196,6 +202,7 @@ public class MainActivity extends Activity {
 			this.betSize = this.smallBet;
 			this.handNum = 1;
 			this.lastRaise = new int[] {-1, -1, -1, -1};
+            this.roundBets = new int[4];
 		}
 		
 		public void increaseRound(){
@@ -304,8 +311,10 @@ public class MainActivity extends Activity {
 		comp.gameProbs = computePreflopProbs(comp.preflopScore);
 		comp.bluff = (int) Math.round(Math.random());
 		comp.drawingHand = false;
+        comp.startChips = comp.chips;
+        player.startChips = player.chips;
 		hideCompCard();
-		//
+
 		displayCard(R.id.player1, player.cards[0], false);
 		displayCard(R.id.player2, player.cards[1], false);
 		clearMessages();
@@ -316,7 +325,7 @@ public class MainActivity extends Activity {
 		updatePlayerBet();
 		updateCompBet();
 		updateHandNum();
-		Toast.makeText(getApplicationContext(), "Preflop score is " + comp.preflopScore, Toast.LENGTH_SHORT).show();
+//		Toast.makeText(getApplicationContext(), "Preflop score is " + comp.preflopScore, Toast.LENGTH_SHORT).show();
 		if(board.dealer == 0) { playerTurn(); }
 		else { compTurn(); }
 	}
@@ -325,7 +334,7 @@ public class MainActivity extends Activity {
 		v.setVisibility(View.INVISIBLE);
 		startHand();		
 	}
-	
+
 	public void clearMessages(){
 		TextView pm = (TextView) findViewById(R.id.playerMessage);
 		TextView cm = (TextView) findViewById(R.id.compMessage);
@@ -338,13 +347,14 @@ public class MainActivity extends Activity {
 		pm.setText("Computer wins pot");
 		updateCompChips(comp.bet + player.bet + board.pot);
 		toggleButtons(1);
+        insert();
 		showNextHand();		
 	}
 	
 	public void checkFold(View v){		
 		if(player.bet < comp.bet) { fold(); return; }
 		TextView pm = (TextView) findViewById(R.id.playerMessage);
-		pm.setText("Player Checks");
+//		pm.setText("Player Checks");
 		player.hasGone = 1;
 		determineTurn();
 	}
@@ -354,7 +364,7 @@ public class MainActivity extends Activity {
 		updatePlayerChips(-(comp.bet - player.bet));
 		player.bet = comp.bet;
 		updatePlayerBet();
-		pm.setText("Player Calls to " + comp.bet);		
+//		pm.setText("Player Calls to " + comp.bet);
 		player.hasGone = 1;
 		determineTurn();
 	}
@@ -366,59 +376,123 @@ public class MainActivity extends Activity {
 		player.numRaises[board.roundNum] += 1;
 		board.lastRaise[board.roundNum] = 0;
 		updatePlayerBet();
-		if(comp.bet == 0){ pm.setText("Player Bets " + player.bet); } 
-		else { pm.setText("Player Raises to " + player.bet); } 
+//		if(comp.bet == 0){ pm.setText("Player Bets " + player.bet); }
+//		else { pm.setText("Player Raises to " + player.bet); }
 		player.hasGone = 1;
 		comp.hasGone = 0;
 		board.betRound += 1;
 		determineTurn();
 	}
 	
-	public void compFold() {	
-		//Toast.makeText(getApplicationContext(), "comp folds", Toast.LENGTH_SHORT).show();
+	public void compFold() {
 		TextView pm = (TextView) findViewById(R.id.playerMessage);
-		TextView cm = (TextView) findViewById(R.id.compMessage);
-		pm.setText("Player wins pot");	
-		cm.setText("Computer Folds");
-		updatePlayerChips(comp.bet + player.bet + board.pot);
-		comp.hasGone = 1;
-		showNextHand();		
+		pm.setText("Player wins pot");
+        String message = "Computer Folds";
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
+        final TextView tv = (TextView) findViewById(R.id.compMessage);
+        tv.setText(message);
+        a.setAnimationListener(new AnimationListener(){
+
+            @Override
+            public void onAnimationStart(Animation animation){}
+
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                updatePlayerChips(comp.bet + player.bet + board.pot);
+                comp.hasGone = 1;
+                showNextHand();
+            }
+        });
+        tv.startAnimation(a);
+        insert();
 	}
 	
 	public void compCheckFold(){
+        String message = "Computer Checks";
 		if(comp.bet < player.bet) { compFold(); return; }
-		//Toast.makeText(getApplicationContext(), "comp checks", Toast.LENGTH_SHORT).show();
-		TextView cm = (TextView) findViewById(R.id.compMessage);
-		cm.setText("Comp Checks");				
-		comp.hasGone = 1;
-		determineTurn();
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
+        final TextView tv = (TextView) findViewById(R.id.compMessage);
+        tv.setText(message);
+        a.setAnimationListener(new AnimationListener(){
+
+            @Override
+            public void onAnimationStart(Animation animation){}
+
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                comp.hasGone = 1;
+                determineTurn();
+            }
+        });
+        tv.startAnimation(a);
 	}
 	
 	public void compCall(){
-		//Toast.makeText(getApplicationContext(), "comp calls", Toast.LENGTH_SHORT).show();
-		TextView cm = (TextView) findViewById(R.id.compMessage);
 		updateCompChips(-1 * (player.bet - comp.bet));
 		comp.bet = player.bet;
 		updateCompBet();
-		cm.setText("Comps Calls to " + player.bet);		
-		comp.hasGone = 1;
-		determineTurn();
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
+        final TextView tv = (TextView) findViewById(R.id.compMessage);
+        tv.setText("Comps Calls to " + player.bet);
+        a.setAnimationListener(new AnimationListener(){
+
+            @Override
+            public void onAnimationStart(Animation animation){}
+
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+                comp.hasGone = 1;
+                determineTurn();
+            }
+        });
+        tv.startAnimation(a);
 	}
 	
 	public void compRaise(){
-		//Toast.makeText(getApplicationContext(), "comp raises", Toast.LENGTH_SHORT).show();
-		TextView cm = (TextView) findViewById(R.id.compMessage);
+        String message;
 		updateCompChips(-1 * (player.bet + board.betSize - comp.bet));
 		comp.bet = player.bet + board.betSize;
 		comp.numRaises[board.roundNum] += 1;
 		board.lastRaise[board.roundNum] = 1;
 		updateCompBet();
-		if(player.bet == 0){ cm.setText("Comp Bets " + comp.bet); } 
-		else { cm.setText("Comp Raises to " + comp.bet); } 
-		comp.hasGone = 1;
-		player.hasGone = 0;
-		board.betRound += 1;
-		determineTurn();
+//        toggleButtons(1);
+        if(player.bet == 0){
+            message = "Comp Bets " + comp.bet;
+        }
+        else {
+            message = "Comp Raises to " + comp.bet;
+            Log.d("why no bet", "player bet is " + player.bet);
+        }
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
+        final TextView tv = (TextView) findViewById(R.id.compMessage);
+        tv.setText(message);
+        a.setAnimationListener(new AnimationListener(){
+
+            @Override
+            public void onAnimationStart(Animation animation){}
+
+            @Override
+            public void onAnimationRepeat(Animation animation){}
+
+            @Override
+            public void onAnimationEnd(Animation animation){
+//                Toast.makeText(getApplicationContext(), "End of animation", Toast.LENGTH_SHORT).show();
+                comp.hasGone = 1;
+                player.hasGone = 0;
+                board.betRound += 1;
+                determineTurn();
+            }
+        });
+        tv.startAnimation(a);
 	}	
 	
 	public void updatePlayerBet(){	
@@ -477,8 +551,7 @@ public class MainActivity extends Activity {
 		View checkButton  = (View) findViewById(R.id.checkFold);
 		View callButton  = (View) findViewById(R.id.call);
 		View raiseButton  = (View) findViewById(R.id.raise);
-		
-		Log.d("In toggle", "whats the problem");
+
 		if(currentTurn == 1){ //comps turn
 			checkButton.setVisibility(View.INVISIBLE);
 			callButton.setVisibility(View.INVISIBLE);
@@ -493,7 +566,6 @@ public class MainActivity extends Activity {
 	public void playerTurn(){
 		toggleButtons(0);
 		changeButtons();
-		//Toast.makeText(getApplicationContext(), "player turn", Toast.LENGTH_SHORT).show();		
 	}
 	
 	public void compTurn(){
@@ -510,15 +582,18 @@ public class MainActivity extends Activity {
 			else if(randNum < comp.gameProbs[1])  { compCall(); }
 			else { compRaise(); }
 		}
-		//Toast.makeText(getApplicationContext(), "comp turn", Toast.LENGTH_SHORT).show();
 	}
 	
 	public void changeButtons(){
 		Button checkButton  = (Button) findViewById(R.id.checkFold);
 		Button callButton  = (Button) findViewById(R.id.call);
 		Button raiseButton  = (Button) findViewById(R.id.raise);
-		
-		if(player.bet == comp.bet){
+        if(player.bet == 0 && comp.bet == 0){
+            checkButton.setText("Check");
+            callButton.setVisibility(View.INVISIBLE);
+            raiseButton.setText("Bet " + board.betSize);
+        }
+		else if(player.bet == comp.bet){
 			checkButton.setText("Check");
 			callButton.setVisibility(View.INVISIBLE);			
 			raiseButton.setText("Raise to " + (comp.bet + board.betSize));
@@ -631,6 +706,7 @@ public class MainActivity extends Activity {
 		
 		if(comp.hasGone == 1 && player.hasGone == 1){
 			//move on to next round
+            board.roundBets[board.roundNum] = player.bet;
 			board.roundNum += 1;
 			if(board.roundNum == 2) { board.betSize = board.betSize * 2; }
 			//Toast.makeText(getApplicationContext(), "round number now " + board.roundNum, Toast.LENGTH_SHORT).show();
@@ -648,7 +724,8 @@ public class MainActivity extends Activity {
 			player.getCurrentHandPercentile();
 			initializeCompProbs();
 			updateCompBet();
-			updatePlayerBet();	
+			updatePlayerBet();
+            clearMessages();
 			//if(board.roundNum < 3)  getFutureValue(); 
 			board.deal();
 		}
@@ -688,7 +765,8 @@ public class MainActivity extends Activity {
 			pm.setText("Players tie with " + comp.winMessage);
 			updateCompChips(board.pot / 2);
 			updatePlayerChips(board.pot / 2);
-		}		
+		}
+        insert();
 	}
 	
 	public void showNextHand(){
@@ -754,11 +832,7 @@ public class MainActivity extends Activity {
 			}
 			return (new double[] {0, 0});
 	}
-	
-	
 
-	
-	
 	public void initializeCompProbs(){
 		//this function will initialize a starting probability action for the comp that will be modified later
 		
@@ -1145,6 +1219,97 @@ public class MainActivity extends Activity {
 			}
 		}
 	}
+
+    public void insert(){
+//        Toast.makeText(getApplicationContext(), "Made it to the end", Toast.LENGTH_SHORT).show();
+
+        String showdown = "0";
+        if (comp.bet == player.bet){
+            showdown = "1";
+            board.roundNum = 3; //the roundNum increases to 4 at showdown so needs to be decreased here
+        }
+        board.roundBets[board.roundNum] = Math.min(player.bet, comp.bet);
+        DB_Task db = new DB_Task();
+        Log.d("board card", cardToString(board.cards[0]));
+        String email = getAccountName();
+        db.execute(Integer.toString(player.startChips - player.chips), cardToString(comp.cards[0]), cardToString(comp.cards[1]),
+                cardToString(board.cards[0]), cardToString(board.cards[1]), cardToString(board.cards[2]),
+                cardToString(board.cards[3]),cardToString(board.cards[4]), cardToString(player.cards[0]),
+                cardToString(player.cards[1]), Integer.toString(board.dealer), Integer.toString(comp.percentile[board.roundNum]),
+                showdown, Integer.toString(board.bigBet), Integer.toString(comp.numRaises[0]), Integer.toString(player.numRaises[0]),
+                Integer.toString(board.lastRaise[0]), Integer.toString(board.roundBets[0]),
+                Integer.toString(comp.numRaises[1]), Integer.toString(player.numRaises[1]),
+                Integer.toString(board.lastRaise[1]), Integer.toString(board.roundBets[1]),
+                Integer.toString(comp.numRaises[2]), Integer.toString(player.numRaises[2]),
+                Integer.toString(board.lastRaise[2]), Integer.toString(board.roundBets[2]),
+                Integer.toString(comp.numRaises[3]), Integer.toString(player.numRaises[3]),
+                Integer.toString(board.lastRaise[3]), Integer.toString(board.roundBets[3]),
+                Integer.toString(board.handNum), Integer.toString(comp.preflopScore), Integer.toString(player.preflopScore),
+                Integer.toString(comp.percentile[1]), Integer.toString(player.percentile[1]),
+                Integer.toString(comp.percentile[2]), Integer.toString(player.percentile[2]),
+                Integer.toString(comp.percentile[3]), Integer.toString(player.percentile[3]),
+                Integer.toString(board.roundNum + 1), Integer.toString(player.startChips), email);
+
+    }
+
+    public String getAccountName(){
+        AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        Account[] list = manager.getAccounts();
+        String email = "";
+
+        Log.d("length of accounts", "" + list.length);
+
+        for(Account account: list)
+        {
+            Toast.makeText(getApplicationContext(), account.name, Toast.LENGTH_SHORT).show();
+            if (account.name.contains("@")) {
+                email = account.name;
+            }
+        }
+        return email;
+    }
+
+    public String cardToString(int cdNum) {
+        int rankNum = cdNum % 13;
+        int suitNum = (int) (cdNum / 13);
+        String rankString = "";
+        String suitString = "";
+
+        switch(rankNum) {
+            case 9:
+                rankString = "T";
+                break;
+            case 10:
+                rankString = "J";
+                break;
+            case 11:
+                rankString = "Q";
+                break;
+            case 12:
+                rankString = "K";
+                break;
+            case 0:
+                rankString = "A";
+                break;
+            default:
+                rankString = "" + (rankNum + 1);
+        }
+        switch(suitNum){
+            case 0:
+                suitString = "c";
+                break;
+            case 1:
+                suitString = "s";
+                break;
+            case 2:
+                suitString = "h";
+                break;
+            case 3:
+                suitString = "d";
+                break;
+        }
+
+        return(rankString + suitString);
+    }
 	
 }
-/Users/Ted/AndroidstudioProjects/coolp/app/src/main/java/com/tdp/coolp/MainActivity.java
