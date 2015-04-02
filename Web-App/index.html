@@ -90,6 +90,7 @@
 		</nav>
 		<!-- end of navigation bar -->
 
+	<div id= "bodyWrapper">	
 		<p id="header">Limit Hold'em Heads-Up Poker</p>
 		<div class = "veryTinyDiv"> </div>
 		
@@ -199,7 +200,8 @@
 		</div>
 
 		<img id = "cardFly" alt = "cardfly" src = "images/card_back.png"/>
-		
+	
+	</div>
 	</body>
 	<script>
 
@@ -720,7 +722,7 @@
 				var numJumps = 50;
 				var  speedAdj = parseInt(getSpeedAdj());
 				var myInt = setInterval(function(){
-					document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+					document.getElementById("compMessage").style.fontSize = (1 + .5 / numJumps * i) + "em";
 					i += 1;
 					if(i == numJumps) {
 						clearInterval(myInt);
@@ -746,7 +748,7 @@
 				lastHandMessage[1] += "<p>Computer calls to " + curPlayerBet + "<br></p>";
 				
 				var myInt = setInterval(function(){
-					document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+					document.getElementById("compMessage").style.fontSize = (1 + .5 / numJumps * i) + "em";
 					i += 1;
 					if(i == numJumps) {
 						clearInterval(myInt);
@@ -788,7 +790,7 @@
 				lastRaise[roundNum - 1] = 1; //comp makes last raise
 				
 				var myInt = setInterval(function(){
-					document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+					document.getElementById("compMessage").style.fontSize = (1 + .5 / numJumps * i) + "em";
 					i += 1;
 					if(i == numJumps) {
 						clearInterval(myInt);
@@ -819,7 +821,7 @@
 				enterHand(compChips - compStartHandChips);
 				
 				var myInt = setInterval(function(){
-					document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+					document.getElementById("compMessage").style.fontSize = (1 + .5 / numJumps * i) + "em";
 					i += 1;
 					if(i == numJumps) {
 						clearInterval(myInt);								
@@ -857,7 +859,7 @@
 				lastRaise[roundNum - 1] = 0;
 				
 				var myInt = setInterval(function() {
-					document.getElementById("compMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+					document.getElementById("compMessage").style.fontSize = (1 + .5 / numJumps * i) + "em";
 					i += 1;
 					if(i == numJumps) {
 						clearInterval(myInt);
@@ -897,7 +899,7 @@
 				playerGone = 1;
 				
 				var myInt = setInterval(function(){
-					document.getElementById("playerMessage").style.fontSize = (1.5 + .5 / numJumps * i) + "em";
+					document.getElementById("playerMessage").style.fontSize = (1 + .5 / numJumps * i) + "em";
 					i += 1;
 					if(i == numJumps) {
 						clearInterval(myInt);

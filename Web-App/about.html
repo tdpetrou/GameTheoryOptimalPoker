@@ -8,13 +8,13 @@
        <!-- twitter stuff -->
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
         <script>
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=706390152732478&version=v2.0";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
+          (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=706390152732478&version=v2.0";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));
         </script>
 
 	</head>
@@ -22,58 +22,147 @@
 	<body>
 
    <nav class="navbar navbar-default"  role="navigation">
-  <div class="container-fluid">
+    <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="http://www.GameTheoryOptimalPoker.com">GTO Poker</a>
-    </div>
+        </button>
+        <a class="navbar-brand" href="http://www.GameTheoryOptimalPoker.com">GTO Poker</a>
+      </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li ><a href="about.html" target = "_blank">About</a></li>
-        <li><a href="stat_page.html" target = "_blank">Stat Page</a></li>
-        <li><a href="fullAccess.html" target = "_blank">Full Access to Computer Cards</a></li>
-        <li><a href="http://www.TedPetrou.com" target = "_blank">Blog</a></li>
-        <li><a href="steaks.html" target = "_blank">Steak T-Shirts</a></li>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li ><a href="about.html" target = "_blank">About</a></li>
+          <li><a href="stat_page.html" target = "_blank">Stat Page</a></li>
+          <li><a href="fullAccess.html" target = "_blank">Full Access to Computer Cards</a></li>
+          <li><a href="http://www.TedPetrou.com" target = "_blank">Blog</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+        	<li>
+        		<div class="fb-like" data-send="true" data-width="120" show-faces="false" data-layout ="button_count" ></div>
+        	</li>
+
+          <li>
+                <a href="https://twitter.com/share" id = "twitter_icon" class="twitter-share-button" data-url="http://www.GameTheoryOptimalPoker.com" data-text="Playing poker at" data-via="GTO_Poker" data-size="large">Tweet</a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/pub/ted-petrou/65/577/706" class="logo" id="in-logo" target = "_blank">
+              <img id = "linkedin_icon" src="images/linkedin_logo.ico"/>
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/tdpetrou/GameTheoryOptimalPoker" class="logo" id="in-logo" target = "_blank">
+              <img id = "github_icon" style = "height:32px" src="images/github_icon.png"/>
+            </a>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+  <div id="bodyWrapper">
+    <div style = 'padding-top:50px;'></div>
+    <div class="container" id = 'aboutme'>
+
+     <h1>About Game Theory Optimal Poker</h1>
+
+      <h3>What is Game Theory Optimal Poker?</h3>
+
+      <p>Game Theory Optimal Poker is a Heads-up Limit Texas Hold'em playing machine that has been designed by a former professional poker heads up specialist. In technical terms, game theory optimal poker is a strategy such that no alternate strategy can beat it if played long enough.  While the game on this website is not game theory optimal it has been modified to the point that it should be challenging to beat.</p>
+
+      <h3>Instructions</h3>
+
+      <ol>
+        <li>Game Theory Optimal Poker plays as any other limit Texas hold'em would play.</li>
+        <li>If you are unfimiliar with the rules, you can visit <a href='https://www.pokerstars.com/poker/games/texas-holdem/'>this page</a> for more info.</li>
+      </ol>
+
+      <h3>Detailed Game Play</h3>
 
 
+      <h4>Preflop</h4>
+
+      <ul>
+      <li>A score for each hand is derived based on the rank of its cards, whether the cards are paired and whether the cards are suited</li>
+      </ul>
+
+      <h4>Post flop</h4>
+
+      <ul>
+      <li>Once the hand makes it to the flop, there is no enough cards to make a complete 5 card hand.</li>
+      <li>All possible two-card starting hands are evaluated given the flop and ranked.</li>
+      <li>The computer is now able to determine what percentile of hands are better/worse than its current hand.</li>
+      <li>The computer then takes into account the action of the previous rounds and the size of the pot to make its decision</li>
+      <li>Some element of randomness is used, so the same hand might be played in many different ways.</li>
+      <li>When the computer has little chance of having the best hand, it will bluff some percentage of the time.</li>
+      </ul>
+
+      <h4>Evolving Game</h4>
+
+      <ul>
+      <li>The computer play of Game Theory Optimal Poker has gone through multiple iterations, thanks in large part to a group of twoplustwo.com members who voluntarily played the game and gave feedback on its performance.</li>
+      <li>Overe the last 100k hands of gameplay, Game Theory Optimal Poker has played break-even poker against its opponents.</li>
 
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-      	<li>
-      		<div class="fb-like" data-send="true" data-width="120" show-faces="false" data-layout ="button_count" ></div>
-      	</li>
-
-        <li>
-              <a href="https://twitter.com/share" id = "twitter_icon" class="twitter-share-button" data-url="http://www.GameTheoryOptimalPoker.com" data-text="Playing poker at" data-via="GTO_Poker" data-size="large">Tweet</a>
-        </li>
-        <li>
-          <a href="https://www.linkedin.com/pub/ted-petrou/65/577/706" class="logo" id="in-logo" target = "_blank">
-            <img id = "linkedin_icon" src="linkedin_logo.ico"/>
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/tdpetrou/GameTheoryOptimalPoker" class="logo" id="in-logo" target = "_blank">
-            <img id = "github_icon" style = "height:32px" src="github_icon.png"/>
-          </a>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-
-
-
-
-	<p id="header">About me page coming soon. Check out my linkedin, github and blog for more info</p>	
-
+    </div>
+  </div>
 	</body>
+
+  <style type="text/css">
+body {
+  background-color: black;
+}
+
+#bodyWrapperWrapper{
+  background-position: center;
+  text-align: center;
+}
+    
+#bodyWrapper {
+  background: url(images/background.png) no-repeat; /* fixed; */
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  /*background-size: cover;*/
+  /*background-size: contain;*/
+  /*background-repeat: no-repeat;*/
+  background-position: center;
+  background-size: 1280px 915px;
+  background-color: black;
+  
+  /*background-position: n: center;*/
+  
+  /*background-size: 50% 50%;*/
+  background-position-y: -70px;
+  min-width: 1280px;
+  min-height: 915px;
+  /*height:915px;*/
+  /*width: 1280px;*/
+}
+
+  #aboutme {
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+/*    color:"#E8E8EE";*/
+    /*background-color:#E8E8EE;*/
+    background-color:#e7e7e7;
+    padding-top: 15px;
+    padding-bottom: 45px;
+    padding-left: 100px;
+    padding-right: 100px;
+    width:60%;
+/*    fill:"#E8E8EE";*/
+    border:1px solid #000;
+    box-shadow;
+    filter:drop-shadow;
+  }
+  </style>
 	

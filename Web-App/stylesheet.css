@@ -1,53 +1,63 @@
-
-		
-body { 
-	background: url(images/background.png) no-repeat; /* center center; /* fixed; */
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-	/*background-repeat: no-repeat;*/
-	
-	background-position: center;
-	/*background-position: 0 155px;*/
-	background-size: 1280px 915px;
+body {
 	background-color: black;
-	background-position-y: 0px 
 }
 
+#bodyWrapperWrapper{
+	background-position: center;
+	text-align: center;
+}
+		
+#bodyWrapper {
+	background: url(images/background.png) no-repeat; /* fixed; */
+	-webkit-background-size: contain;
+	-moz-background-size: contain;
+	-o-background-size: contain;
+	/*background-size: cover;*/
+	/*background-size: contain;*/
+	/*background-repeat: no-repeat;*/
+	background-position: center;
+	background-size: 1280px 915px;
+	background-color: black;
+	
+	/*background-position: n: center;*/
+	
+	/*background-size: 50% 50%;*/
+	background-position-y: -70px;
+	min-width: 1280px;
+	min-height: 915px;
+	/*height:915px;*/
+	/*width: 1280px;*/
+}
 
 .crop{
-	/*float:left; 
-	/*margin:.5em 10px .5em 0;*/
 	overflow:hidden; /* this is important */
-
 	height:98px;
 	width:74px;
 	display:inline-block;
-	
-	}
+}
 	/* input values to crop the image: top, right, bottom, left */
 .crop img{
 	margin: 0px 0px 0px 0px;
-	}
+}
 	
 .crop2 img{
-		margin:0px 0px 0px 0px;
+	margin:0px 0px 0px 0px;
 }
 
 .bigDiv {
-
 	text-align:center;
 	height:7em;
 	margin:auto;
 	width:100%;
 	white-space:nowrap;
 }
+
 .medDiv {
 	margin-top: 10px;
 	text-align:center;
 	height:4.5em;
 }
+
 .lilDiv {
 	text-align:center;
 	height:3em;
@@ -62,7 +72,6 @@ body {
 	text-align:center;
 	height:1em;
 }
-
 
 .board {	
 	height: 7em;
@@ -89,7 +98,7 @@ body {
 	/*float:right;*/
 	border-radius:50px;
 	vertical-align:top;
-	}
+}
 
 .rightBet {
 	height:7em; 
@@ -98,11 +107,13 @@ body {
 	display:inline-block;
 	vertical-align:top;
 	position:relative;
+	color:#FDF5E6;
 }
 
 .leftBetPlayer {
 	height:7em; 
 	/*width: 25%;*/
+	color:#FDF5E6;
 	width:250px;
 	display:inline-block;
 	vertical-align:top;
@@ -116,6 +127,7 @@ body {
 	display:inline-block;
 	vertical-align:top;
 	position:relative;
+	color:#FDF5E6;
 }
 
 .farRight {
@@ -140,20 +152,22 @@ body {
 	height:80px;
 	width:200px;
 	border-radius:10px;
-
 }
+
 #bfold {
 	height:4em;
 	width:7em;
 	border-radius:10px;
 	visibility:hidden;
 }
+
 #bcall {	
 	height:4em;
 	width:7em;
 	border-radius:10px;
 	visibility:hidden;
 }
+
 #braise {
 	height:4em;
 	width:7em;
@@ -164,53 +178,56 @@ body {
 #imgButtonComp {
 	height:40px;
 	width:30px;
-visibility:hidden;	
+	visibility:hidden;	
 }
-
 
 #imgButtonPlayer {
 	height:40px;
 	width:30px;
 	visibility:hidden;
 }
+
 #playerMessage  {
 	text-align: center;
-	font-family: Garamond, serif;
-	font-size: 2em;
+	/*font-family: Garamond, serif;*/
+	font-size: 1.5em;
 	margin:0px;
+	color:#FDF5E6;
 }
 
 #compMessage {
 	display:inline-block;
 	border:1px green;
+	color:#FDF5E6;
 }
 
 #compBet {
-	font-size: 2em;
+	font-size: 1.5em;
 	text-align:right;
+	color:#FDF5E6;
 }
 
 #totalPot {
-	font-size: 2em;
+	font-size: 1.5em;
 	text-align:left;
 	margin-bottom:0px;
 }
 
 #playerBet {
-	font-size: 2em;
+	font-size: 1.5em;
 	text-align:right;
 }
 
 #totalCompChips {
-	font-size: 2em;
+	font-size: 1.5em;
 	text-align:left;
 }
+
 #totalPlayerChips {
-	font-size: 2em;
+	font-size: 1.5em;
 	text-align:left;
 	margin-bottom:0px;
 }
-
 
 #header {
 	text-align: center;
@@ -218,8 +235,6 @@ visibility:hidden;
 	font-size: 3em;
 	color:red;
 }
-
-
 
 #seeStats {
 	margin-top:0px;
@@ -231,7 +246,6 @@ visibility:hidden;
 	text-align:left;
 	visibility:hidden;
 }
-
 
 #upButton {
 	/*max-width:10%;*/
@@ -246,11 +260,11 @@ visibility:hidden;
 	cursor: pointer;
 }
 
-
 #speedP {
 	font-size:1.5em;
 	/*width: 50%;*/
 	margin-top: 5px;
+	color:#FDF5E6;
 }
 
 a {	
@@ -258,12 +272,11 @@ a {
 	font-size:1em;
 	font-family: Verdana, sans-serif;
 	text-align:left;
-	
 }
-/*
-* {
+
+/** {
 	border:1px red dotted;
-}  */
+} */ 
 
 span {
 	font-weight: bold;
@@ -281,7 +294,6 @@ span {
 	left:-10px;
 	visibility:hidden;
 }
-
 
 #linkedin_icon {
 	height: 32px;
@@ -303,10 +315,10 @@ span {
 }
 
 .fbLogin {
-	/*overflow: hidden;*/
+	overflow: hidden;
 	display: inline-block;
-	/*width:25%;*/
-	width: 250px;
+	width:22%;
+	/*width: 250px;*/
 	vertical-align: top;
 	text-align: right;
 	word-wrap:break-word;
@@ -327,11 +339,10 @@ span {
 }
 
 .speedDiv {
-	
 	text-align:center;
 	display: inline-block;
-	width:270px;
-	/*width:25%;*/
+	/*width:270px;*/
+	width:25%;
 	margin: auto;
 	height: 100px;
 	position:relative;
