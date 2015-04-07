@@ -12,21 +12,12 @@ body {
 	-webkit-background-size: contain;
 	-moz-background-size: contain;
 	-o-background-size: contain;
-	/*background-size: cover;*/
-	/*background-size: contain;*/
-	/*background-repeat: no-repeat;*/
-	background-position: center;
+	background-position: center -70px;
 	background-size: 1280px 915px;
 	background-color: black;
-	
-	/*background-position: n: center;*/
-	
-	/*background-size: 50% 50%;*/
-	background-position-y: -70px;
+	/*background-position-y: -70px;*/ /*doesn't work for mozilla*/
 	min-width: 1280px;
 	min-height: 915px;
-	/*height:915px;*/
-	/*width: 1280px;*/
 }
 
 .crop{
