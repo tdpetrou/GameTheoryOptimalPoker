@@ -24,6 +24,7 @@ import android.text.Layout;
 import android.text.style.AlignmentSpan;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -139,6 +140,9 @@ public class MainActivity extends Activity {
         
         setContentView(R.layout.activity_main);
         board.hideBoardCards();
+        board.changeCardDimensions();
+        
+        
         
         ((TextView) findViewById(R.id.compChips)).setText("Chips: " + comp.chips);
         ((TextView) findViewById(R.id.compBet)).setText("Bet: " + comp.bet);
@@ -158,9 +162,11 @@ public class MainActivity extends Activity {
         player.cardObject[0].showDrawnCard();
         player.cardObject[1].showDrawnCard();
         
-        if (board.hand_over) {
+        if (board.hand_over && comp.bet == player.bet) {
             comp.cardObject[0].showDrawnCard();
             comp.cardObject[1].showDrawnCard();
+        } else {
+            comp.flipCardsOver();
         }
         
         if (roundNum >= 1){
@@ -471,6 +477,7 @@ public class MainActivity extends Activity {
             this.allIn = false;
             this.overs = false;
             this.startChips = this.chips;
+            
         }
         
         private void setCards(){
@@ -479,10 +486,24 @@ public class MainActivity extends Activity {
                 this.cardObject[0] = new Card(this.cards[0], R.id.player1);
                 this.cardObject[1] = new Card(this.cards[1], R.id.player2);
             } else {
+                Log.d("fuck", "about to set card back");
                 this.cards = Arrays.copyOfRange(deck.returnArray(), 7, 9);
                 this.cardObject[0] = new Card(this.cards[0], R.id.comp1);
                 this.cardObject[1] = new Card(this.cards[1], R.id.comp2);
+                this.flipCardsOver();
+                this.removeDrawnCard();
+                Log.d("fuck", "set card back");
             }
+        }
+        
+        public void flipCardsOver(){
+            findViewById(this.cardObject[0].id).setBackgroundResource(R.drawable.card_back);
+            findViewById(this.cardObject[1].id).setBackgroundResource(R.drawable.card_back);
+        }
+        
+        public void removeDrawnCard(){
+            ((TextView) findViewById(this.cardObject[0].id)).setText("");
+            ((TextView) findViewById(this.cardObject[1].id)).setText("");
         }
         
     }
@@ -505,6 +526,7 @@ public class MainActivity extends Activity {
         int stacked;
         boolean hand_over;
         int[] cardIDs;
+        
         
         
         public Board(){
@@ -564,6 +586,7 @@ public class MainActivity extends Activity {
             Log.d("fucker", "board new hand2");
             this.lastRaise = new int[] {-1, -1, -1, -1};
             this.hand_over = false;
+            this.changeCardDimensions();
             
             Button callButton = (Button) findViewById(R.id.call);
             callButton.setText("Call");
@@ -583,6 +606,60 @@ public class MainActivity extends Activity {
             for(int i = 0; i < 5; i++){
                 findViewById(this.cardIDs[i]).setVisibility(View.INVISIBLE);
             }
+        }
+        
+        public void changeCardDimensions(){
+            /*
+             Ensures board cards fit in screen. Should only do something in portrait mode
+             Get size of screen in pixels
+             Determine if 5 cards can fit on screen given current width.
+             If they are too big, shrink them so the fit right in.
+             */
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
+            TextView tv;
+            
+            
+            //            float scale = getContext().getResources().getDisplayMetrics().density;
+            //            int pixels = (int) (currentCardWidth * scale + 0.5f);
+            int currentCardWidth = findViewById(this.cardIDs[0]).getLayoutParams().width;
+            int margin = (int) currentCardWidth / 20;
+            
+            int totalCardSize = currentCardWidth * 5 - 4 * margin;
+            if (totalCardSize > width){
+                int newCardWidth = width / 5;
+                int newMargin = newCardWidth / 20;
+                
+                for(int i = 0; i < 5; i++) {
+                    tv = (TextView)findViewById(this.cardIDs[i]);
+                    tv.getLayoutParams().width = newCardWidth - newMargin;
+                    tv.getLayoutParams().height = (int) (1.6 * tv.getLayoutParams().width);
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tv.getLayoutParams();
+                    params.setMargins(0, 0, newMargin, 0);
+                }
+            }
+            
+            //change height
+            int currentHeight = findViewById(this.cardIDs[0]).getLayoutParams().height;
+            int totalHeight = currentHeight * 3;
+            int perc = 100 * totalHeight / height;
+            //            Toast.makeText(getApplicationContext(), "Total height: " + height + " card height: " + totalHeight + " perc: " + perc, Toast.LENGTH_LONG).show();
+            if (perc > 67){
+                int newCardHeight = (int) (height / 4.5);
+                
+                int[] allCards = {this.cardIDs[0], this.cardIDs[1],this.cardIDs[2],this.cardIDs[3],this.cardIDs[4],
+                    player.cardObject[0].id, player.cardObject[1].id, comp.cardObject[0].id, comp.cardObject[1].id};
+                for(int i = 0; i < 9; i++) {
+                    tv = (TextView)findViewById(allCards[i]);
+                    tv.getLayoutParams().height = newCardHeight;
+                    tv.getLayoutParams().width = (int) (tv.getLayoutParams().height * .61);
+                }
+                
+            }
+            
         }
     }
     
@@ -1147,6 +1224,9 @@ public class MainActivity extends Activity {
         TextView pm = (TextView) findViewById(R.id.playerMessage);
         toggleButtons(1);
         
+        findViewById(R.id.comp1).setBackgroundResource(R.drawable.card_outline);
+        findViewById(R.id.comp2).setBackgroundResource(R.drawable.card_outline);
+        
         comp.cardObject[0].displayCard(false, false);
         comp.cardObject[1].displayCard(false, false);
         
@@ -1404,5 +1484,7 @@ public class MainActivity extends Activity {
         
         return(rankString + suitString);
     }
+    
+    
     
 }
