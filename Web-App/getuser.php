@@ -1,29 +1,9 @@
 <?php
 
-  $hostname = "localhost";
-  $username = "ted";
-  $dbname = "";
-  $con = mysqli_connect($hostname, $username, '', $dbname);
-
-  // use for remote from my pc
-  // $hostname = "box969.bluehost.com";
-
-
-
-// $user = 'root';
-// $password = 'root';
-// $db = 'hand_history';
-// $host = 'localhost';
-// //$port = 8889;
-
-// $con = mysqli_connect(
-//    $host,
-//    $user,
-//    $password,
-//    $db
-// );
-
-
+$hostname = "localhost";
+$username = "ted";
+$dbname = "";
+$con = mysqli_connect($hostname, $username, '', $dbname);
 
 if (!$con) {
     die('Could not connect: ' . mysqli_error($con));
@@ -32,8 +12,6 @@ if (!$con) {
   $ipAddress = $_SERVER['REMOTE_ADDR'];
 
 $sql="SELECT * FROM `Total User Summary` WHERE ipaddress = '" . $ipAddress . "'";
-
-
 
 $sql = "select `IPaddress` AS `IPaddress`,count(1) AS `HandsPlayed`,
 (sum(`Score`) * -(1)) AS `Score`,(((sum(`Score`) / 
@@ -49,22 +27,18 @@ $sql = "select `IPaddress` AS `IPaddress`,count(1) AS `HandsPlayed`,
 //player stats
 echo '
 <div>
-<table class = "table table-striped table-bordered table-hover table-condensed" border="5">
-<tr>
-<th>Your First 4 of IPaddress</th>
-<th>Hands Played</th>
-<th>Total Winnings</th>
-<th>Win Rate (BB/100)</th>
-<th>Voluntarily put money into pot from small blind %</th>
-<th>Went to showdown when seeing the flop %</th>
-<th>Won at showdown %</th>
-
-</tr>';
+  <table class = "table table-striped table-bordered table-hover table-condensed" border="5">
+    <tr>
+    <th>Your First 4 of IPaddress</th>
+    <th>Hands Played</th>
+    <th>Total Winnings</th>
+    <th>Win Rate (BB/100)</th>
+    <th>Voluntarily put money into pot from small blind %</th>
+    <th>Went to showdown when seeing the flop %</th>
+    <th>Won at showdown %</th>
+  </tr>';
 
 $result = mysqli_query($con, $sql);
-// $result2 = $result;
-//$row = mysqli_fetch_array($result); //$result
-//while($row = mysqli_fetch_array($result))
 $row = mysqli_fetch_array($result);
   
   echo "<tr>";
@@ -76,16 +50,13 @@ $row = mysqli_fetch_array($result);
   echo "<td>" . round($row['SD_perc'] * 100, 1)  . "</td>";
   echo "<td>" . round($row['SD_Win_perc'] * 100, 1)  . "</td>";
   echo "</tr>";
-echo "</table>";
-echo "</div>";
-
-
-echo '<div id="chart_div" style="width: 900px; height: 500px;"></div>';
-
+  echo "</table>";
+  echo "</div>";
+  echo '<div id="chart_div" style="width: 900px; height: 500px;"></div>';
 
 //last 24 hours fb
- $sql = "SELECT FB_Name, HandsPlayed, Score, BBper100 
-		FROM `last 24 hours fb` order by score desc limit 5";
+$sql = "SELECT FB_Name, HandsPlayed, Score, BBper100 
+  FROM `last 24 hours fb` order by score desc limit 5";
 
 $sql = "SELECT `FB_Name` AS `FB_Name`,`FB_ID` AS `fb_id`,count(1) AS `HandsPlayed`
 ,(sum(`Score`) * -(1)) AS `Score`,((sum(`Score`) / count(1)) * -(5)) AS `BBper100` 
@@ -98,14 +69,13 @@ $result = mysqli_query($con, $sql);
 
 echo "<div>";
 echo '<p id = "thead">Last 24 hours Top 5 Facebook Users Leaderboard by total winnings</p>';
-
 echo '<table class = "table table-striped table-bordered table-hover table-condensed"  border="1">
-<tr>
-<th>Facebook Name</th>
-<th>Hands Played</th>
-<th>Total Winnings</th>
-<th>BB per 100 </th>
-</tr>';
+        <tr>
+        <th>Facebook Name</th>
+        <th>Hands Played</th>
+        <th>Total Winnings</th>
+        <th>BB per 100 </th>
+        </tr>';
 while ($row = mysqli_fetch_array($result)) {
     echo "<td>" . $row["FB_Name"] . "</td>";
     echo "<td>" . $row["HandsPlayed"] . "</td>";
@@ -114,10 +84,7 @@ while ($row = mysqli_fetch_array($result)) {
     echo "</tr>";
 }
 echo "</table>";
- echo "</div>";
-
-
-
+echo "</div>";
 
 //last 24 hours
  $sql = "SELECT left(ipaddress, 5) as firstIP, HandsPlayed, Score, BBper100 
@@ -132,14 +99,13 @@ $result = mysqli_query($con, $sql);
 
 echo "<div>";
 echo '<p id = "thead">Last 24 hours Top 5 Leaderboard by total winnings</p>';
-
 echo "<table class = 'table table-striped table-bordered table-hover table-condensed' border='1'>
-<tr>
-<th>First 4 of IPaddress</th>
-<th>Hands Played</th>
-<th>Total Winnings</th>
-<th>BB per 100 </th>
-</tr>";
+      <tr>
+      <th>First 4 of IPaddress</th>
+      <th>Hands Played</th>
+      <th>Total Winnings</th>
+      <th>BB per 100 </th>
+      </tr>";
 while ($row = mysqli_fetch_array($result)) {
     echo "<td>" . $row['firstIP'] . "</td>";
     echo '<td>' . $row['HandsPlayed'] . '</td>';
@@ -148,15 +114,11 @@ while ($row = mysqli_fetch_array($result)) {
     echo "</tr>";
 }
 echo "</table>";
- echo "</div>";
-
-
-
+echo "</div>";
 
 //winnings by bb/100 min 200 hands
 $sql = "SELECT left(ipaddress, 5) as firstIP, HandsPlayed, Score, BBper100 
 		FROM `Total User Summary` where HandsPlayed > 200 order by BBper100 desc limit 10";
-
 
 $sql = " SELECT left(ipaddress, 5)  as firstIP, count(1) AS `HandsPlayed`,
 (sum(`Score`) * -(1)) AS `Score`,(((sum(`Score`) / 
@@ -171,12 +133,12 @@ echo "<div>";
 echo '<p id = "thead">Top 10 Leaderboard by BB per 100 (Minimum 200 hands played)</p>';
 
 echo "<table class = 'table table-striped table-bordered table-hover table-condensed' border='1'>
-<tr>
-<th>First 4 of IPaddress</th>
-<th>Hands Played</th>
-<th>Total Winnings</th>
-<th>BB per 100 </th>
-</tr>";
+      <tr>
+      <th>First 4 of IPaddress</th>
+      <th>Hands Played</th>
+      <th>Total Winnings</th>
+      <th>BB per 100 </th>
+      </tr>";
 while ($row = mysqli_fetch_array($result)) {
     echo "<td>" . $row['firstIP'] . "</td>";
     echo '<td>' . $row['HandsPlayed'] . '</td>';
@@ -185,7 +147,7 @@ while ($row = mysqli_fetch_array($result)) {
     echo "</tr>";
 }
 echo "</table>";
- echo "</div>";
+echo "</div>";
 
 //total winnings
 $sql = "SELECT left(ipaddress, 5) as firstIP, HandsPlayed, Score, BBper100 
@@ -201,7 +163,6 @@ $result = mysqli_query($con, $sql);
 
 echo "<div>";
 echo '<p id = "thead">Top 10 Leaderboard by total winnings</p>';
-
 echo "<table class = 'table table-striped table-bordered table-hover table-condensed' border='1'>
 <tr>
 <th>First 4 of IPaddress</th>
@@ -217,7 +178,7 @@ while ($row = mysqli_fetch_array($result)) {
     echo "</tr>";
 }
 echo "</table>";
- echo "</div>";
+echo "</div>";
 
 //put computer winnings
  $date = date('Y-m-d H:i:s');
@@ -225,7 +186,6 @@ echo "</table>";
 		FROM `hh2` where timestampdiff(hour, date, '" .$date . "') <= 24";
 $result = mysqli_query($con, $sql);
 
- 
 echo "<div>";
 echo '<p id = "thead">Computer winnings last 24 hours</p>';
 echo "<table class = 'table table-hover' border='1'>
@@ -243,25 +203,22 @@ while ($row = mysqli_fetch_array($result)) {
 echo "</table>";
 echo "</div>";
 
-
 //player best/worst hands
 echo "<div>";
 echo '<p id = "thead">Top 5 hands where you won the most</p>';
-
 echo "<table class = 'table table-striped table-bordered table-hover table-condensed' border='1'>
-<tr>
-<th>Amount Won</th>
-<th>Player Card 1</th>
-<th>Player Card 2</th>
-<th>Board Card 1</th>
-<th>Board Card 2</th>
-<th>Board Card 3</th>
-<th>Board Card 4</th>
-<th>Board Card 5</th>
-<th>Computer Card 1</th>
-<th>Computer Card 2</th>
-
-</tr>";
+      <tr>
+      <th>Amount Won</th>
+      <th>Player Card 1</th>
+      <th>Player Card 2</th>
+      <th>Board Card 1</th>
+      <th>Board Card 2</th>
+      <th>Board Card 3</th>
+      <th>Board Card 4</th>
+      <th>Board Card 5</th>
+      <th>Computer Card 1</th>
+      <th>Computer Card 2</th>
+      </tr>";
 
 $sql = "SELECT Score, C1, C2, b1, b2, b3, b4, b5, p1, p2 
 		FROM `hh2` WHERE ipaddress = '" . $ipAddress . "' order by score limit 5";
@@ -283,13 +240,9 @@ while ($row = mysqli_fetch_array($result)) {
 }
 
 echo "</table>";
-
 echo "</div>" ;
-
-
 echo "<div>";
 echo '<p id = "thead">Top 5 hands where you lost the most</p>';
-
 echo "<table class = 'table table-striped table-bordered table-hover table-condensed' border='1'>
 <tr>
 <th>Amount Lost</th>
@@ -302,7 +255,6 @@ echo "<table class = 'table table-striped table-bordered table-hover table-conde
 <th>Board Card 5</th>
 <th>Computer Card 1</th>
 <th>Computer Card 2</th>
-
 </tr>";
 
 $sql = "SELECT Score, C1, C2, b1, b2, b3, b4, b5, p1, p2 
@@ -325,10 +277,6 @@ while ($row = mysqli_fetch_array($result)) {
 }
 
 echo "</table>";
-
 echo "</div>" ;
 
-
 mysqli_close($con);
-?>
-

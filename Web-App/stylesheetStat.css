@@ -4,32 +4,22 @@
 	font-size: 3em;
 }
 
-/*.table td {
-	width:auto !important;
-	word-wrap:break-word;
-	text-align:center;
-}*/
-
-
 .table th {
-   /*width:10em;*/
-   text-align: center;   
+	text-align: center;
 }
 
-.table  {
-   width:auto !important;
-   text-align: center;   
+.table {
+	width: auto !important;
+	text-align: center;
 }
-
 
 #pc {
-	background-color:green;
+	background-color: green;
 }
 
 #cc {
-	background-color:red;
+	background-color: red;
 }
-
 
 #linkedin_icon {
 	height: 32px;
@@ -37,7 +27,7 @@
 
 #twitter_icon {
 	margin-left: 10px;
-	margin-top: 16px;	
+	margin-top: 16px;
 }
 
 #linkedin_icon {
@@ -49,22 +39,25 @@
 }
 
 .container-fluid {
-	background: #ba1e2e; 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#111), color-stop(100%,#D00)); /* safari */
+	background: #ba1e2e;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #111), color-stop(100%, #D00));
+	/* safari */
 	background: -webkit-linear-gradient(top, #111 0%, #D00 100%);
-	background: -moz-linear-gradient(top, #111 0%, #D00 100%); /* mozilla */
-	background: -o-linear-gradient(top, #111 0%, #D00 100%); /* opera */
-	background: -ms-linear-gradient(top, #111 0%, #D00 100%); /* explorer */
+	background: -moz-linear-gradient(top, #111 0%, #D00 100%);
+	/* mozilla */
+	background: -o-linear-gradient(top, #111 0%, #D00 100%);
+	/* opera */
+	background: -ms-linear-gradient(top, #111 0%, #D00 100%);
+	/* explorer */
 	background: linear-gradient(top, #111 0%, #D00 100%);
-	filter: progid:dXImageTransform.Microsoft.gradient (startcolorstr = "#111", endcolorstr = "#D00", GradientType = 0);
+	filter: progid:dXImageTransform.Microsoft.gradient (startcolorstr="#111", endcolorstr="#D00", GradientType=0);
 	position: fixed;
-	top:0;
-	left:0;
-	/*height: 85px;*/
+	top: 0;
+	left: 0;
 	z-index: 1000;
-	width:100%;
+	width: 100%;
 }
 
 .btn-link {
-	color:red;
+	color: red;
 }

@@ -2,272 +2,275 @@ body {
 	background-color: black;
 }
 
-#bodyWrapperWrapper{
+#bodyWrapperWrapper {
 	background-position: center;
 	text-align: center;
 }
-		
+
 #bodyWrapper {
-	background: url(images/background.png) no-repeat; /* fixed; */
+	background: url(images/background.png) no-repeat;
+	/* fixed; */
 	-webkit-background-size: contain;
 	-moz-background-size: contain;
 	-o-background-size: contain;
 	background-position: center -70px;
 	background-size: 1280px 915px;
 	background-color: black;
-	/*background-position-y: -70px;*/ /*doesn't work for mozilla*/
+	/*background-position-y: -70px;*/
+	/*doesn't work for mozilla*/
 	min-width: 1280px;
 	min-height: 915px;
 }
 
-.crop{
-	overflow:hidden; /* this is important */
-	height:98px;
-	width:74px;
-	display:inline-block;
+.crop {
+	overflow: hidden;
+	/* this is important */
+	height: 98px;
+	width: 74px;
+	display: inline-block;
 }
-	/* input values to crop the image: top, right, bottom, left */
-.crop img{
+
+
+/* input values to crop the image: top, right, bottom, left */
+
+.crop img {
 	margin: 0px 0px 0px 0px;
 }
-	
-.crop2 img{
-	margin:0px 0px 0px 0px;
+
+.crop2 img {
+	margin: 0px 0px 0px 0px;
 }
 
 .bigDiv {
-	text-align:center;
-	height:7em;
-	margin:auto;
-	width:100%;
-	white-space:nowrap;
+	text-align: center;
+	height: 7em;
+	margin: auto;
+	width: 100%;
+	white-space: nowrap;
 }
 
 .medDiv {
 	margin-top: 10px;
-	text-align:center;
-	height:4.5em;
+	text-align: center;
+	height: 4.5em;
 }
 
 .lilDiv {
-	text-align:center;
-	height:3em;
+	text-align: center;
+	height: 3em;
 }
 
 .tinyDiv {
-	text-align:center;
-	height:2.5em;
+	text-align: center;
+	height: 2.5em;
 }
 
 .veryTinyDiv {
-	text-align:center;
-	height:1em;
+	text-align: center;
+	height: 1em;
 }
 
-.board {	
+.board {
 	height: 7em;
 	width: 420px;
-	margin-left:auto;
-	margin-right:auto;
+	margin-left: auto;
+	margin-right: auto;
 	text-align: center;
-	display:inline;
+	display: inline;
 }
+
 .compCard {
 	height: 7em;
 	width: 250px;
-	margin-left:auto;
-	margin-right:auto;
+	margin-left: auto;
+	margin-right: auto;
 	text-align: center;
-	display:inline;
+	display: inline;
 }
 
 .divButton {
-	overflow:hidden; /* this is important */
-	height:40px;
-	width:30px;
-	display:inline-block;
+	overflow: hidden;
+	/* this is important */
+	height: 40px;
+	width: 30px;
+	display: inline-block;
 	/*float:right;*/
-	border-radius:50px;
-	vertical-align:top;
+	border-radius: 50px;
+	vertical-align: top;
 }
 
 .rightBet {
-	height:7em; 
+	height: 7em;
 	/*width: 25%;*/
-	width:250px;
-	display:inline-block;
-	vertical-align:top;
-	position:relative;
-	color:#FDF5E6;
+	width: 250px;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	color: #FDF5E6;
 }
 
 .leftBetPlayer {
-	height:7em; 
+	height: 7em;
 	/*width: 25%;*/
-	color:#FDF5E6;
-	width:250px;
-	display:inline-block;
-	vertical-align:top;
-	position:relative;
+	color: #FDF5E6;
+	width: 250px;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
 }
 
 .rightBetPlayer {
-	height:7em; 
+	height: 7em;
 	/*width: 10%;*/
-	width:250px;
-	display:inline-block;
-	vertical-align:top;
-	position:relative;
-	color:#FDF5E6;
+	width: 250px;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	color: #FDF5E6;
 }
 
 .farRight {
-	height:7em;
-	width:150px;
-	vertical-align:top;
-	display:inline-block;
+	height: 7em;
+	width: 150px;
+	vertical-align: top;
+	display: inline-block;
 }
 
 .bbutton {
-	display:inline-block;
+	display: inline-block;
 }
 
 #b1 {
-	
-	height:4em;
-	width:7em;
-	visibility:hidden;
+	height: 4em;
+	width: 7em;
+	visibility: hidden;
 }
 
 #b2 {
-	height:80px;
-	width:200px;
-	border-radius:10px;
+	height: 80px;
+	width: 200px;
+	border-radius: 10px;
 }
 
 #bfold {
-	height:4em;
-	width:7em;
-	border-radius:10px;
-	visibility:hidden;
+	height: 4em;
+	width: 7em;
+	border-radius: 10px;
+	visibility: hidden;
 }
 
-#bcall {	
-	height:4em;
-	width:7em;
-	border-radius:10px;
-	visibility:hidden;
+#bcall {
+	height: 4em;
+	width: 7em;
+	border-radius: 10px;
+	visibility: hidden;
 }
 
 #braise {
-	height:4em;
-	width:7em;
-	border-radius:10px;
-	visibility:hidden;
+	height: 4em;
+	width: 7em;
+	border-radius: 10px;
+	visibility: hidden;
 }
 
 #imgButtonComp {
-	height:40px;
-	width:30px;
-	visibility:hidden;	
+	height: 40px;
+	width: 30px;
+	visibility: hidden;
 }
 
 #imgButtonPlayer {
-	height:40px;
-	width:30px;
-	visibility:hidden;
+	height: 40px;
+	width: 30px;
+	visibility: hidden;
 }
 
-#playerMessage  {
+#playerMessage {
 	text-align: center;
 	/*font-family: Garamond, serif;*/
 	font-size: 1.5em;
-	margin:0px;
-	color:#FDF5E6;
+	margin: 0px;
+	color: #FDF5E6;
 }
 
 #compMessage {
-	display:inline-block;
-	border:1px green;
-	color:#FDF5E6;
+	display: inline-block;
+	border: 1px green;
+	color: #FDF5E6;
 }
 
 #compBet {
 	font-size: 1.5em;
-	text-align:right;
-	color:#FDF5E6;
+	text-align: right;
+	color: #FDF5E6;
 }
 
 #totalPot {
 	font-size: 1.5em;
-	text-align:left;
-	margin-bottom:0px;
+	text-align: left;
+	margin-bottom: 0px;
 }
 
 #playerBet {
 	font-size: 1.5em;
-	text-align:right;
+	text-align: right;
 }
 
 #totalCompChips {
 	font-size: 1.5em;
-	text-align:left;
+	text-align: left;
 }
 
 #totalPlayerChips {
 	font-size: 1.5em;
-	text-align:left;
-	margin-bottom:0px;
+	text-align: left;
+	margin-bottom: 0px;
 }
 
 #header {
 	text-align: center;
 	font-family: Garamond, serif;
 	font-size: 3em;
-	color:red;
+	color: red;
 }
 
 #seeStats {
-	margin-top:0px;
-	text-align:left;
+	margin-top: 0px;
+	text-align: left;
 }
 
 #handHistory {
-	margin-top:0px;
-	text-align:left;
-	visibility:hidden;
+	margin-top: 0px;
+	text-align: left;
+	visibility: hidden;
 }
 
 #upButton {
 	/*max-width:10%;*/
-	width:30px;
+	width: 30px;
 	cursor: pointer;
 }
 
 #downButton {
 	/*max-width:10%;*/
-	width:30px;
+	width: 30px;
 	transform: rotate(180deg);
 	cursor: pointer;
 }
 
 #speedP {
-	font-size:1.5em;
+	font-size: 1.5em;
 	/*width: 50%;*/
 	margin-top: 5px;
-	color:#FDF5E6;
+	color: #FDF5E6;
 }
 
-a {	
+a {
 	color: blue;
-	font-size:1em;
+	font-size: 1em;
 	font-family: Verdana, sans-serif;
-	text-align:left;
+	text-align: left;
 }
-
-/** {
-	border:1px red dotted;
-} */ 
 
 span {
 	font-weight: bold;
@@ -276,14 +279,14 @@ span {
 }
 
 #thecanvas {
-	position:absolute;
+	position: absolute;
 }
 
 #cardFly {
-	position:absolute;
-	top:-10px;
-	left:-10px;
-	visibility:hidden;
+	position: absolute;
+	top: -10px;
+	left: -10px;
+	visibility: hidden;
 }
 
 #linkedin_icon {
@@ -292,51 +295,51 @@ span {
 
 #twitter_icon {
 	margin-left: 10px;
-	margin-top: 16px;	
+	margin-top: 16px;
 }
 
 #linkedin_icon {
 	margin-left: -30px;
 }
 
-#google_plus_icon{
+#google_plus_icon {
 	width: 30px;
-	height:30px;
-	float:right;
+	height: 30px;
+	float: right;
 }
 
 .fbLogin {
 	overflow: hidden;
 	display: inline-block;
-	width:22%;
+	width: 22%;
 	/*width: 250px;*/
 	vertical-align: top;
 	text-align: right;
-	word-wrap:break-word;
+	word-wrap: break-word;
 	/*border: 2px dotted red;*/
 }
 
 .fb-login-button {
 	margin-right: 0px;
 	/*width: 50%;*/
-	word-wrap:break-word;
+	word-wrap: break-word;
 }
 
 .allPlayerButtons {
 	display: inline-block;
 	vertical-align: top;
 	margin: auto;
-	width:310px;
+	width: 310px;
 }
 
 .speedDiv {
-	text-align:center;
+	text-align: center;
 	display: inline-block;
 	/*width:270px;*/
-	width:25%;
+	width: 25%;
 	margin: auto;
 	height: 100px;
-	position:relative;
+	position: relative;
 	bottom: 50px;
 }
 
@@ -345,24 +348,28 @@ span {
 }
 
 .container-fluid {
-	background: #ba1e2e; 
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#111), color-stop(100%,#D00)); /* safari */
+	background: #ba1e2e;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #111), color-stop(100%, #D00));
+	/* safari */
 	background: -webkit-linear-gradient(top, #111 0%, #D00 100%);
-	background: -moz-linear-gradient(top, #111 0%, #D00 100%); /* mozilla */
-	background: -o-linear-gradient(top, #111 0%, #D00 100%); /* opera */
-	background: -ms-linear-gradient(top, #111 0%, #D00 100%); /* explorer */
+	background: -moz-linear-gradient(top, #111 0%, #D00 100%);
+	/* mozilla */
+	background: -o-linear-gradient(top, #111 0%, #D00 100%);
+	/* opera */
+	background: -ms-linear-gradient(top, #111 0%, #D00 100%);
+	/* explorer */
 	background: linear-gradient(top, #111 0%, #D00 100%);
-	filter: progid:dXImageTransform.Microsoft.gradient (startcolorstr = "#111", endcolorstr = "#D00", GradientType = 0);
+	filter: progid:dXImageTransform.Microsoft.gradient (startcolorstr="#111", endcolorstr="#D00", GradientType=0);
 	position: fixed;
-	top:0;
-	left:0;
+	top: 0;
+	left: 0;
 	/*height: 85px;*/
 	z-index: 1000;
-	width:100%;
+	width: 100%;
 }
 
 .btn-link {
-	color:red;
+	color: red;
 }
 
 #totalHandsPlayed {

@@ -1,9 +1,9 @@
 <?php
 
-      $hostname = "localhost";
-      $username = "ted";
-      $dbname = "";
-    $con = mysqli_connect($hostname, $username, '', $dbname);
+$hostname = "localhost";
+$username = "ted";
+$dbname = "";
+$con = mysqli_connect($hostname, $username, '', $dbname);
 
 if (!$con) {
     die('Could not connect: ' . mysqli_error($con));
@@ -62,8 +62,6 @@ $FB_ID=$_REQUEST['FB_ID'];
 $Start_Chips=$_REQUEST['Start_Chips'];
 $Email=$_REQUEST['Email'];
 
-
-
 $sql = "INSERT INTO hh_android (Guid, Score, C1, C2, B1, B2, B3, B4, B5, P1, P2, Button, 
 	Percentile, ShowDown, Date, IPaddress, BigBet, CompRaise_PF, PlayerRaise_PF,
 	Last_Raise_PF, Bet_PF, CompRaise_Flop, PlayerRaise_Flop, Last_Raise_Flop, Bet_Flop,
@@ -82,9 +80,5 @@ values('" . $Guid . "'," . $Score . ",'" . $C1 . "','" . $C2 . "','" . $B1 . "',
     . $Comp_Turn_Perc . "," . $Player_Turn_Perc . "," . $Comp_River_Perc . "," .  $Player_River_Perc . ","
     . $Round_Completed . "," . $Stacked . ",'" . $FB_Name . "','" . $FB_ID . "'," . $Start_Chips . ",'" . $Email . "')";
 
-// development hash x1j14O6PA3alcopEzNSos707Uug=
-// release hash nZu+ug2IgcBL9ipRtsy82xP+R2c=
-// copied hash RyyPHAFqudSnSV4rQpRhT6PGpo4=
 $result = mysqli_query($con, $sql);
-
 mysqli_close($con);

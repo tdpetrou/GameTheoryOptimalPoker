@@ -1,8 +1,8 @@
 <?php
 
-  $hostname = "localhost";
-  $username = "ted";
-  $dbname = "";
+$hostname = "localhost";
+$username = "ted";
+$dbname = "";
 
 $con = mysqli_connect($hostname, $username, '', $dbname);
 

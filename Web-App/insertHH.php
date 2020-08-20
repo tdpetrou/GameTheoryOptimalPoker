@@ -1,18 +1,15 @@
 <?php
 
-      $hostname = "localhost";
-      $username = "ted";
-      $dbname = "";
-    $con = mysqli_connect($hostname, $username, '', $dbname);
+$hostname = "localhost";
+$username = "ted";
+$dbname = "";
+$con = mysqli_connect($hostname, $username, '', $dbname);
 
 $q = $_GET['q'];
-
 $parts = explode(',', $q);
-
 
 if (!$con) {
     die('Could not connect: ' . mysqli_error($con));
-    echo 'stupidity is defined';
 }
 $date = date("Y-m-d H:i:s");
 $ipAddress = $_SERVER['REMOTE_ADDR'];
@@ -21,17 +18,14 @@ if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
 }
 $fb_id = $parts[39];
 $handNum = (int) $parts[29];
-
-$sql="SELECT count(1) as ct FROM `hh2` WHERE ipaddress = '" . $ipAddress . "' and gamehandnum = 1";
+$sql = "SELECT count(1) as ct FROM `hh2` WHERE ipaddress = '" . $ipAddress . "' and gamehandnum = 1";
 $result = mysqli_query($con, $sql);
 $row = mysqli_fetch_array($result);
-
 $ipSessions = $row['ct'];
 
 if ($handNum == 1) {
     $ipSessions = $ipSessions + 1;
 }
-
 
 $sql = "INSERT INTO hh2(Score, C1, C2, B1, B2, B3, B4, B5, P1, P2, Button, Percentile, 
 		ShowDown, Date, IPaddress, BigBet, CompRaise_PF, PlayerRaise_PF, Last_Raise_PF, Bet_PF,
@@ -56,10 +50,5 @@ for ($i = 13; $i < 41; $i++) {
 $sql = $sql . ", " . $ipSessions;
 $sql = $sql . ")";
 
-
 $result = mysqli_query($con, $sql);
-
-#echo $result;
-#echo $sql;
-
 mysqli_close($con);
